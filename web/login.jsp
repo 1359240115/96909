@@ -1,5 +1,7 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<HTML><HEAD><TITLE>96909ÉçÇøÉú»î·şÎñÖĞĞÄÉí·İÈ·ÈÏÏµÍ³</TITLE>
+<HTML><HEAD><TITLE>96909ç¤¾åŒºç”Ÿæ´»æœåŠ¡ä¸­å¿ƒèº«ä»½ç¡®è®¤ç³»ç»Ÿ</TITLE>
 <META http-equiv=Content-Type content="text/html; charset=gb2312">
 <META name=GENERATOR content="MSHTML 8.00.6001.18783">
 <STYLE type=text/css>
@@ -8,7 +10,7 @@
 }
 BODY {
 	MARGIN: 0px;
-	background-image: url(ny/IMAGE/l_bg.jpg);
+	background-image: url(ny/image/l_bg.jpg);
 	background-repeat: repeat-x;
 }
 .text {
@@ -30,10 +32,12 @@ BODY {
 </style>
 </HEAD>
 <BODY style="MARGIN: 0px;">
+<form action="LoginSvl">
+  <input type="hidden" name="reqType" value="login">
 <TABLE cellSpacing=0 cellPadding=0 width=1001 align=center height=595>
   
   <TR>
-    <TD background="ny/IMAGE/ov2.jpg"><TABLE width=650 height="378"  border="0" 
+    <TD background="ny/image/ov2.jpg"><TABLE width=650 height="378"  border="0"
       align=center 
       cellPadding=0 cellSpacing=0>
       <TR>
@@ -48,28 +52,30 @@ BODY {
                         color=red></font></td>
               </tr>
               <tr>
-                <td width="34%" height=36 align=right class=STYLE1>ÓÃ»§Ãû£º</td>
+                <td width="34%" height=36 align=right class=STYLE1>ç”¨æˆ·åï¼š</td>
                 <td height=36 width="66%" align=left><input 
-                        style="WIDTH: 120px" class=input name=j_username></td>
+                        style="WIDTH: 120px" type="text" class=input name=j_username></td>
               </tr>
               <tr align=middle>
                 <td height=20 
-                        align=right class=STYLE1>ÃÜ&nbsp;&nbsp;Âë£º</td>
-                <td height=20 align=left><input style="WIDTH: 120px" 
-                        class=input value=1 type=password name=j_password></td>
+                        align=right class=STYLE1>å¯†&nbsp;&nbsp;ç ï¼š</td>
+                <td height=20 align=left><input style="WIDTH: 120px" class=input type="password" name=j_password></td>
               </tr>
               <tr align=middle>
                 <td height=20 colspan=2>&nbsp;</td>
               </tr>
               <tr align=middle>
-                <td height=20 colspan=2 align="center"><input class=button_new value="µÇ Â¼" type=submit name=Submit2 onClick="javascript:location.href='ny/index.htm'">
+                <td height=20 colspan=2 align="center"><input class=button_new value="ç™» å½•" type=submit>
                   &nbsp; &nbsp;
-                  <input class=button_new value="ÖØ ÖÃ" type=reset name=Submit></td>
+                  <input class=button_new value="é‡ ç½®" type=reset name=Submit></td>
+                <h3>${info}</h3>
               </tr>
+
             </table></td>
           </tr>
         </table></TD>
       </TR>
-    </TABLE></TD>
-  </TR></TABLE>
+    </TABLE>
+</TD>
+  </TR></TABLE></form>
 </BODY></HTML>
