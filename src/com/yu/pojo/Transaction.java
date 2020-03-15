@@ -3,7 +3,7 @@ package com.yu.pojo;
 import java.util.Date;
 
 //交易记录bean
-public class transaction {
+public class Transaction {
     private int id;//交易记录编号
     private int c_id;//公司编号
     private int e_id;//雇主编号
@@ -17,10 +17,10 @@ public class transaction {
     private int charge;//中介费
     private Date accdate;//成交日期
 
-    public transaction() {
+    public Transaction() {
     }
 
-    public transaction(int id, int c_id, int e_id, int w_id, int jbr_id) {
+    public Transaction(int id, int c_id, int e_id, int w_id, int jbr_id) {
         this.id = id;
         this.c_id = c_id;
         this.e_id = e_id;

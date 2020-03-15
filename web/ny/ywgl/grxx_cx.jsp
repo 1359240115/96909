@@ -52,9 +52,9 @@ function doDBClick(url,operator,type) {
       <td height="23" align="right" bgcolor="#FFFFFF">姓名：</td>
       <td bgcolor="#FFFFFF"><input name="textarea2" type="text" id="textarea2" value="" size="30" class="pi"></td>
       <td align="right" bgcolor="#FFFFFF">性别：</td>
-      <td bgcolor="#FFFFFF"><input type="radio" name="sex" id="radio" value="M">
+      <td bgcolor="#FFFFFF"><input type="radio" name="sex" id="radio" value="男">
         男
-          <input type="radio" name="sex" id="radio2" value="W">
+          <input type="radio" name="sex" id="radio2" value="女">
           女</td>
     </tr>
    
@@ -89,7 +89,7 @@ function doDBClick(url,operator,type) {
         <input type="radio" name="radio" value="小学" />
       小学&nbsp; </td>
 
-	   <td height="23" align="right" bgcolor="#FFFFFF">爱好：</td>
+	   <%--<td height="23" align="right" bgcolor="#FFFFFF">爱好：</td>
       <td colspan="4" bgcolor="#FFFFFF">
         <input type="checkbox" name="checkbox"  value="唱歌" />
         唱歌&nbsp;
@@ -100,7 +100,7 @@ function doDBClick(url,operator,type) {
         <input type="checkbox" name="checkbox"  value="体育"/>
         体育&nbsp;
         <input type="checkbox" name="checkbox"  value="书法"/>
-      书法&nbsp; </td>
+      书法&nbsp; </td>--%>
     </tr>
    
    
@@ -110,50 +110,48 @@ function doDBClick(url,operator,type) {
       <td colspan="4" bgcolor="#FFFFFF">
         <input type="checkbox" name="checkbox1" id="checkbox1" value="普通话"/>
         普通话&nbsp;
-        <input type="checkbox" name="checkbox2" id="checkbox2" value="广州话"/>
+        <input type="checkbox" name="checkbox1" id="checkbox2" value="广州话"/>
         广州话&nbsp;
-        <input type="checkbox" name="checkbox3" id="checkbox3" value="英语"/>
+        <input type="checkbox" name="checkbox1" id="checkbox3" value="英语"/>
         英语
       其它语言：&nbsp;
-      <input name="otherlanguage" type="text" id="textarea16" size="30" class="pi"></td>
+      <input name="checkbox1" type="text" id="textarea16" size="30" class="pi"></td>
     </tr>
     <tr>
       <td height="23" align="right" bgcolor="#FFFFFF">状态：</td>
-      <td colspan="4" bgcolor="#FFFFFF"><input type="radio" name="status" id="radio4" value="radio" />
+      <td colspan="4" bgcolor="#FFFFFF"><input type="radio" name="status" id="radio4" value="在岗" />
         在岗&nbsp;&nbsp;
-        <input type="radio" name="status" id="radio5" value="radio" />
+        <input type="radio" name="status" id="radio5" value="待岗" />
         待岗&nbsp;&nbsp;
-        <input type="radio" name="status" id="radio6" value="radio" />
-      其它：&nbsp;
-      <input name="status" type="text" id="textarea17" size="30" class="pi"></td>
+        <input type="radio" name="status" id="radio6" value="离职" />
+      离职&nbsp;
     </tr>
     <tr>
       <td height="23" align="right" bgcolor="#FFFFFF">婚姻状况：</td>
-      <td colspan="4" bgcolor="#FFFFFF"><input type="radio" name="hyzt" id="radio7" value="radio" />
+      <td colspan="4" bgcolor="#FFFFFF"><input type="radio" name="hyzt" id="radio7" value="已婚" />
         已婚
         &nbsp;
-        <input type="radio" name="hyzt" id="radio8" value="radio" />
+        <input type="radio" name="hyzt" id="radio8" value="未婚" />
         未婚&nbsp;&nbsp;
-        <input type="radio" name="hyzt" id="radio9" value="radio" />
+        <input type="radio" name="hyzt" id="radio9" value="离异" />
         离异
         &nbsp;
-        <input type="radio" name="hyzt" id="radio10" value="radio" />
+        <input type="radio" name="hyzt" id="radio10" value="丧偶" />
         丧偶
         &nbsp;&nbsp;
-        <input type="radio" name="hyzt" id="radio11" value="radio" />
-      其它：&nbsp;
-      <input name="hyzt" type="text" id="textarea18" value="" size="30" class="pi"></td>
+        <input type="radio" name="hyzt" id="radio11" value="其它" />
+      其它&nbsp;
     </tr>
     <tr>
       <td height="23" align="right" bgcolor="#FFFFFF">证照状况：</td>
       <td colspan="4" bgcolor="#FFFFFF">
-        <input type="checkbox" name="checkbox3" id="checkbox4" value="计生证" />
+        <input type="checkbox" name="checkbox2" id="checkbox4" value="计生证" />
         计生证&nbsp;
-        <input type="checkbox" name="checkbox4" id="checkbox5" value="健康证"/>
+        <input type="checkbox" name="checkbox2" id="checkbox5" value="健康证"/>
         健康证&nbsp;&nbsp;
-        <input type="checkbox" name="checkbox5" id="checkbox6" value="暂住证"/>
+        <input type="checkbox" name="checkbox2" id="checkbox6" value="暂住证"/>
         暂住证&nbsp;&nbsp;
-        <input type="checkbox" name="checkbox6" id="checkbox6.1" value="上岗证"/>
+        <input type="checkbox" name="checkbox2" id="checkbox6.1" value="上岗证"/>
       上岗证 </td>
     </tr>
    
@@ -163,38 +161,36 @@ function doDBClick(url,operator,type) {
       <td colspan="4" bgcolor="#FFFFFF"><table width="100%" border="0" cellpadding="1" cellspacing="0" bgcolor="#bdc7d3" class="text_lb">
         <tr>
             <td height="28" bgcolor="#FFFFFF">
-              <input type="checkbox" name="skill1" value="照顾婴儿"/>
+              <input type="checkbox" name="skill" value="照顾婴儿"/>
               照顾婴儿        &nbsp;&nbsp;&nbsp;
-              <input type="checkbox" name="skill2"  value="带小孩"/>
+              <input type="checkbox" name="skill"  value="带小孩"/>
               带小孩          &nbsp;&nbsp;&nbsp;
-              <input type="checkbox" name="skill3"  value="照顾老人"/>
+              <input type="checkbox" name="skill"  value="照顾老人"/>
               照顾老人          &nbsp;&nbsp;&nbsp;
-              <input type="checkbox" name="skill4" value="煮饭"/>
+              <input type="checkbox" name="skill" value="煮饭"/>
               煮饭          &nbsp;&nbsp;&nbsp;
-              <input type="checkbox" name="skill5"  value="粤菜"/>
+              <input type="checkbox" name="skill"  value="粤菜"/>
               粤菜          &nbsp;&nbsp;&nbsp;
-              <input type="checkbox" name="skill6"  value="客家菜"/>
+              <input type="checkbox" name="skill"  value="客家菜"/>
               客家菜          &nbsp;&nbsp;&nbsp;
-              <input type="checkbox" name="skill7" value="煲汤"/>
+              <input type="checkbox" name="skill" value="煲汤"/>
               煲烫</td>
         </tr>
           <tr>
             <td height="28" bgcolor="#FFFFFF">
-              <input type="checkbox" name="skill8" value="扫地"/>
+              <input type="checkbox" name="skill" value="扫地"/>
               扫地        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              <input type="checkbox" name="skill9" value="拖地"/>
+              <input type="checkbox" name="skill" value="拖地"/>
               拖地          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              <input type="checkbox" name="skill10"  value="擦窗"/>
+              <input type="checkbox" name="skill"  value="擦窗"/>
               擦窗
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                      <input type="checkbox" name="skill11" value="洗衣"/>
+                      <input type="checkbox" name="skill" value="洗衣"/>
               洗衣          &nbsp;&nbsp;&nbsp;
-              <input type="checkbox" name="skill12"   value="打蜡"/>
+              <input type="checkbox" name="skill"   value="打蜡"/>
               打蜡          &nbsp;&nbsp;&nbsp;
-              <input type="checkbox" name="skill13"   value="通渠"/>
+              <input type="checkbox" name="skill"   value="通渠"/>
               通渠&nbsp;&nbsp;&nbsp;
-              &nbsp;&nbsp;&nbsp;&nbsp;其它：
-              <input name="skill14" type="text"  size="30" class="pi"></td>
         </tr>
       </table></td>
     </tr>

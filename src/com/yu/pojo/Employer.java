@@ -3,7 +3,7 @@ package com.yu.pojo;
 import java.util.Date;
 
 //表示雇主
-public class employer {
+public class Employer {
     private int id;
     private int c_id;
     private String name;
@@ -25,10 +25,10 @@ public class employer {
     private float minprice;
     private Date birthday;
 
-    public employer() {
+    public Employer() {
     }
 
-    public employer(int id, int c_id) {
+    public Employer(int id, int c_id) {
         this.id = id;
         this.c_id = c_id;
     }

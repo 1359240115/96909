@@ -3,11 +3,12 @@ import java.text.DateFormat;
 import java.util.Date;
 
 //工人bean
-public class worker {
+public class Worker {
     private int w_id;   //员工编号
     private int c_id;   //公司编号
     private String name;//名字
     private String sex;//性别
+    private String xueli;//学历
     private String idcard;//身份证号
     private Date birthday;//出生日期
     private int age;//年龄
@@ -18,20 +19,37 @@ public class worker {
     private String paddress;//户籍地址
     private String address;//地址
     private String banknumber;//银行卡号
+    private String[] yuyan;//语言
     private String status;//状态
     private String hunfou;//婚否
-    private String jineng;//技能
+    private String[] jineng;//技能
     private Date inputtime;//录入时间
     private int company;//所属公司
 
-    public worker() {
+    public Worker() {
     }
 
-    public worker(int w_id, int c_id, String name, String sex) {
+    public Worker(int w_id, int c_id, String name, String sex) {
         this.w_id = w_id;
         this.c_id = c_id;
         this.name = name;
         this.sex = sex;
+    }
+
+    public String[] getYuyan() {
+        return yuyan;
+    }
+
+    public void setYuyan(String[] yuyan) {
+        this.yuyan = yuyan;
+    }
+
+    public String getXueli() {
+        return xueli;
+    }
+
+    public void setXueli(String xueli) {
+        this.xueli = xueli;
     }
 
     public int getW_id() {
@@ -162,11 +180,11 @@ public class worker {
         this.hunfou = hunfou;
     }
 
-    public String getJineng() {
+    public String[] getJineng() {
         return jineng;
     }
 
-    public void setJineng(String jineng) {
+    public void setJineng(String[] jineng) {
         this.jineng = jineng;
     }
 
