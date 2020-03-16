@@ -51,7 +51,7 @@ function doDBClick(url,operator,type) {
         <td align="center" nowrap>${worker.status}</td>
         <td align="center" nowrap>${worker.inputtime}&nbsp; </td>
         <td align="center" nowrap>${worker.c_id}</td>
-        <td align="center" nowrap><a href="grxx_ck.htm">查看</a> <a href="grxx_xg.htm">修改</a></td>
+        <td align="center" nowrap><a href="${pageContext.request.contextPath}/ny/rlzy/grxx_ck.htm">查看</a> <a href="${pageContext.request.contextPath}/ny/rlzy/grxx_xg.htm">修改</a></td>
       </tr>
     </c:forEach>
   </table>

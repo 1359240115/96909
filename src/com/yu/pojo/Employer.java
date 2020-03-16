@@ -12,27 +12,125 @@ public class Employer {
     private String mingzu;
     private String jiguan;
     private String xueli;
-    private String idcard;
+    private int idcard;
+    private String gzdw;//工作单位
     private String zhiye;
     private String hetonghao;
     private Date hetongqixian;
-    private int phone;
+    private Integer phone;
     private String address;
-    private String yaoqiu;
+    private String yaoqiu;//工人类型
     private int jingbanren;
     private Date inputdate;
     private float maxprice;
     private float minprice;
     private Date birthday;
+    private String status;
+    private String workspace;
+    private int jtrs;//家庭人数
+    private int fwmj;
+    private String fwnr;//服务内容
+    private String ysxg;
+    private String qita;//家庭内容
+
+
+    public Employer(int id, int c_id, String name, String sex, int age, String mingzu, String jiguan, String xueli, int idcard, String gzdw, String zhiye, String hetonghao, Date hetongqixian, Integer phone, String address, String yaoqiu, int jingbanren, Date inputdate, float maxprice, float minprice, Date birthday, String status, String workspace, int jtrs, int fwmj, String fwnr, String ysxg, String qita) {
+        this.id = id;
+        this.c_id = c_id;
+        this.name = name;
+        this.sex = sex;
+        this.age = age;
+        this.mingzu = mingzu;
+        this.jiguan = jiguan;
+        this.xueli = xueli;
+        this.idcard = idcard;
+        this.gzdw = gzdw;
+        this.zhiye = zhiye;
+        this.hetonghao = hetonghao;
+        this.hetongqixian = hetongqixian;
+        this.phone = phone;
+        this.address = address;
+        this.yaoqiu = yaoqiu;
+        this.jingbanren = jingbanren;
+        this.inputdate = inputdate;
+        this.maxprice = maxprice;
+        this.minprice = minprice;
+        this.birthday = birthday;
+        this.status = status;
+        this.workspace = workspace;
+        this.jtrs = jtrs;
+        this.fwmj = fwmj;
+        this.fwnr = fwnr;
+        this.ysxg = ysxg;
+        this.qita = qita;
+    }
 
     public Employer() {
     }
 
-    public Employer(int id, int c_id) {
-        this.id = id;
-        this.c_id = c_id;
+    public String getGzdw() {
+        return gzdw;
     }
 
+    public void setGzdw(String gzdw) {
+        this.gzdw = gzdw;
+    }
+
+    public String getWorkspace() {
+        return workspace;
+    }
+
+    public void setWorkspace(String workspace) {
+        this.workspace = workspace;
+    }
+
+    public int getJtrs() {
+        return jtrs;
+    }
+
+    public void setJtrs(int jtrs) {
+        this.jtrs = jtrs;
+    }
+
+    public int getFwmj() {
+        return fwmj;
+    }
+
+    public void setFwmj(int fwmj) {
+        this.fwmj = fwmj;
+    }
+
+    public String getFwnr() {
+        return fwnr;
+    }
+
+    public void setFwnr(String fwnr) {
+        this.fwnr = fwnr;
+    }
+
+    public String getYsxg() {
+        return ysxg;
+    }
+
+    public void setYsxg(String ysxg) {
+        this.ysxg = ysxg;
+    }
+
+    public String getQita() {
+        return qita;
+    }
+
+    public void setQita(String qita) {
+        this.qita = qita;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
     public int getId() {
         return id;
     }
@@ -97,11 +195,11 @@ public class Employer {
         this.xueli = xueli;
     }
 
-    public String getIdcard() {
+    public int getIdcard() {
         return idcard;
     }
 
-    public void setIdcard(String idcard) {
+    public void setIdcard(int idcard) {
         this.idcard = idcard;
     }
 
@@ -129,11 +227,11 @@ public class Employer {
         this.hetongqixian = hetongqixian;
     }
 
-    public int getPhone() {
+    public Integer getPhone() {
         return phone;
     }
 
-    public void setPhone(int phone) {
+    public void setPhone(Integer phone) {
         this.phone = phone;
     }
 

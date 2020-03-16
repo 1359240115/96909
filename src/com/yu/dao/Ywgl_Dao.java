@@ -1,5 +1,6 @@
 package com.yu.dao;
 
+import com.yu.pojo.Employer;
 import com.yu.pojo.Worker;
 import com.yu.util.DbPool;
 
@@ -89,6 +90,134 @@ public class Ywgl_Dao {
                 workerList.add(rswoker);
             }
             return workerList;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+            dao.releaseResource(con,pst,rs);
+        }
+        return null;
+    }
+
+    //业务管理下的客户管理主页面
+    public List<Employer> queryAllEmployer(){
+        String sql = "select e_id,e_name,e_sex,e_age,e_requirement,e_minprice,e_maxprice,e_inputdate from employer";
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        Connection con = DbPool.getConnection();
+        try {
+            pst = con.prepareStatement(sql);
+            rs = dao.execQuery(pst,null);
+            List<Employer> employerList = new ArrayList<>();
+            while (rs!=null&rs.next()){
+                Employer employer = new Employer();
+                employer.setId(rs.getInt(1));
+                employer.setName(rs.getString(2));
+                employer.setSex(rs.getString(3));
+                employer.setAge(rs.getInt(4));
+                employer.setYaoqiu(rs.getString(5));
+                employer.setMinprice(rs.getInt(6));
+                employer.setMaxprice(rs.getInt(7));
+                employer.setInputdate(rs.getDate(8));
+                employer.setStatus(employerStatus(employer.getId()));
+                employerList.add(employer);
+            }
+            return employerList;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+            dao.releaseResource(con,pst,rs);
+        }
+        return null;
+    }
+
+    //返回雇主状态的方法
+    //只需要在交易记录表里面查找是否有雇主的信息
+    //返回一个“已雇佣”或“待雇佣”的字符串。
+    private String employerStatus(int e_id){
+        String sql = "select * from transaction where e_id=?";
+        Connection con = DbPool.getConnection();
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        String rsStr = "待雇佣";
+        try {
+            pst = con.prepareStatement(sql);
+            rs = dao.execQuery(pst,e_id);
+            if (rs!=null&rs.next()){
+                rsStr = "已雇佣";
+            }
+            return rsStr;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+            dao.releaseResource(con,pst,rs);
+        }
+        return rsStr;
+    }
+
+   //业务管理下的客户管理中的模糊查询方法
+    public List<Employer> queryEmployerByJS(Employer employer){
+        String sql = "select e_id,e_name,e_sex,e_age,e_requirement,e_minprice,e_maxprice,e_inputdate from employer";
+        String criteria = "";
+        //拼接SQL语句
+        if (!employer.getName().isEmpty()){//姓名
+            criteria += " e_name like '%"+employer.getName()+"%'";
+        }
+        if (employer.getSex()!=null){//性别
+            if (criteria.isEmpty()){
+                criteria += "e_sex='"+employer.getSex()+"'";
+            }else {
+                criteria += "and e_sex='"+employer.getSex()+"'";
+            }
+        }
+        if (employer.getPhone()!=null){
+            if (criteria.trim().isEmpty()){
+                criteria += "e_phone="+employer.getPhone().toString()+"";
+            }else {
+                criteria += "and e_phone="+employer.getPhone().toString()+"";
+            }
+        }
+        if (employer.getYaoqiu()!=null){
+            if (criteria.trim().isEmpty()){
+                criteria += "e_requirement like '%"+employer.getYaoqiu()+"%'";
+            }else {
+                criteria += " and e_requirement like '%"+employer.getYaoqiu()+"%'";
+            }
+        }
+        if (!criteria.isEmpty()){
+            sql += " where "+criteria;
+        }
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        Connection con = DbPool.getConnection();
+        try {
+            pst = con.prepareStatement(sql);
+            rs = dao.execQuery(pst,null);
+            List<Employer> employerList = new ArrayList<>();
+            while (rs!=null&rs.next()){
+                Employer rsemployer = new Employer();
+                rsemployer.setId(rs.getInt(1));
+                rsemployer.setName(rs.getString(2));
+                rsemployer.setSex(rs.getString(3));
+                rsemployer.setAge(rs.getInt(4));
+                rsemployer.setYaoqiu(rs.getString(5));
+                rsemployer.setMinprice(rs.getInt(6));
+                rsemployer.setMaxprice(rs.getInt(7));
+                rsemployer.setInputdate(rs.getDate(8));
+                rsemployer.setStatus(employerStatus(rsemployer.getId()));
+                //此处做判断，判断查询条件中的客户状态是否为空
+                //1.如果不为空再做一个判断，判断结果集中的客户状态是否和条件中的状态一致
+                //是则添加到list集合中，否则不添加。
+                //2.如果为空，则直接添加到集合中
+                if (employer.getStatus()!=null){
+                    if (employer.getStatus().equals(rsemployer.getStatus())){
+                        employerList.add(rsemployer);
+                    }
+                }else {
+                    employerList.add(rsemployer);
+                }
+
+            }
+            return employerList;
         } catch (SQLException e) {
             e.printStackTrace();
         }finally {
