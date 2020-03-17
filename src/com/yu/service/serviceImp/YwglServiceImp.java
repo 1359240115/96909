@@ -25,7 +25,17 @@ public class YwglServiceImp implements YwglService {
     }
 
     @Override
-    public boolean addEmployer(Employer employer,String account) {
-        return dao.addEmployer(employer,account);
+    public boolean addEmployer(Employer employer) {
+        return dao.addEmployer(employer);
+    }
+
+    @Override
+    public Employer seeEmployerByid(String id) {
+        return dao.seeEmployerByid(id);
+    }
+
+    @Override
+    public boolean updateEmployerByhetonghao(Employer employer) {
+        return dao.updateEmployerByhetonghao(employer);
     }
 }

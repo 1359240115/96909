@@ -229,15 +229,15 @@ public class Ywgl_Dao {
     }
 
     //业务管理下的增加新客户
-    public Boolean addEmployer(Employer e,String c_account){
-        String sql = "insert into employer(c_id,e_name,e_contractid,e_maxprice,e_minprice,e_sex,e_age,e_nation,e_native,e_education,e_idcard,e_occupation,e_contractdate,e_phone,e_address,e_requirement,e_chargeman,e_inputdate,e_workspace,e_home,e_jtrs,e_fwnr,e_jtmj,e_ysxg,e_qita) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+    public Boolean addEmployer(Employer e){
+        String sql = "insert into employer(c_id,e_name,e_contractid,e_maxprice,e_minprice,e_sex,e_age,e_nation,e_native,e_education,e_idcard,e_occupation,e_contractdate,e_phone,e_address,e_requirement,e_chargeman,e_inputdate,e_workspace,e_jtrs,e_fwnr,e_jtmj,e_ysxg,e_qita,e_home) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         PreparedStatement pst = null;
         Boolean rs = false;
         Connection con = DbPool.getConnection();
         try {
             con.setAutoCommit(false);
             pst = con.prepareStatement(sql);
-            dao.execUpdate(pst,e.getC_id(),e.getName(),e.getHetonghao(),e.getMaxprice(),e.getMinprice(),e.getSex(),e.getAge(),e.getMingzu(),e.getJiguan(),e.getXueli(),e.getIdcard(),e.getZhiye(),e.getHetongqixian(),e.getPhone(),e.getAddress(),String.valueOf(e.getYaoqiu()),e.getJingbanren(),e.getInputdate(),e.getWorkspace(),e.getAddress(),e.getJtrs(),e.getFwnr(),e.getFwmj(),e.getYsxg(),e.getQita());
+            dao.execUpdate(pst,e.getC_id(),e.getName(),e.getHetonghao(),e.getMaxprice(),e.getMinprice(),e.getSex(),e.getAge(),e.getMingzu(),e.getJiguan(),e.getXueli(),e.getIdcard(),e.getZhiye(),e.getHetongqixian(),e.getPhone(),e.getAddress(),String.valueOf(e.getYaoqiu()),e.getJingbanren(),e.getInputdate(),e.getWorkspace(),e.getJtrs(),e.getFwnr(),e.getFwmj(),e.getYsxg(),e.getQita(),e.getHome());
             con.commit();
             rs = true;
             return rs;
@@ -254,4 +254,68 @@ public class Ywgl_Dao {
         return rs;
     }
 
+    //已知ID查看的客户的具体信息
+    public Employer seeEmployerByid(String id){
+        String sql = "select * from employer where e_id=?";
+        Connection con = DbPool.getConnection();
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        Employer employer = new Employer();
+        try {
+            pst = con.prepareStatement(sql);
+            rs = dao.execQuery(pst,id);
+            if (rs!=null&rs.next()){
+                employer.setName(rs.getString(3));
+                employer.setSex(rs.getString(4));
+                employer.setAge(rs.getString(5));
+                employer.setMingzu(rs.getString(6));
+                employer.setJiguan(rs.getString(7));
+                employer.setXueli(rs.getString(8));
+                employer.setIdcard(rs.getString(9));
+                employer.setZhiye(rs.getString(10));
+                employer.setHetonghao(rs.getString(11));
+                employer.setHetongqixian(rs.getString(12));
+                employer.setPhone(rs.getString(13));
+                employer.setAddress(rs.getString(14));
+                employer.setYaoqiu(rs.getString(15));
+                employer.setJingbanren(rs.getString(16));
+                employer.setInputdate(rs.getString(17));
+                employer.setMaxprice(rs.getString(18));
+                employer.setMinprice(rs.getString(19));
+                employer.setBirthday(rs.getString(20));
+                employer.setWorkspace(rs.getString(21));
+                employer.setHome(rs.getString(22));
+                employer.setJtrs(rs.getString(23));
+                employer.setFwnr(rs.getString(24));
+                employer.setFwmj(rs.getString(25));
+                employer.setYsxg(rs.getString(26));
+                employer.setQita(rs.getString(27));
+            }
+            return employer;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+            dao.releaseResource(con,pst,rs);
+        }
+        return null;
+    }
+
+    //修改客户信息
+    public boolean updateEmployerByhetonghao(Employer e){
+        String sql = "update employer set e_maxprice=?,e_minprice=?,e_sex=?,e_age=?,e_nation=?,e_native=?,e_education=?,e_idcard=?,e_occupation=?,e_contractdate=?,e_phone=?,e_address=?,e_chargeman=?,e_inputdate=?,e_workspace=?,e_jtrs=?,e_fwnr=?,e_jtmj=?,e_ysxg=?,e_qita=?,e_home=? where e_contractid=?";
+        Connection con = DbPool.getConnection();
+        PreparedStatement pst = null;
+        Boolean rs =false;
+        try {
+            con.setAutoCommit(false);
+            pst = con.prepareStatement(sql);
+            dao.execUpdate(pst,e.getMaxprice(),e.getMinprice(),e.getSex(),e.getAge(),e.getMingzu(),e.getJiguan(),e.getXueli(),e.getIdcard(),e.getZhiye(),e.getHetongqixian(),e.getPhone(),e.getAddress(),e.getJingbanren(),e.getInputdate(),e.getWorkspace(),e.getJtrs(),e.getFwnr(),e.getFwmj(),e.getYsxg(),e.getQita(),e.getHome(),e.getHetonghao());
+            con.commit();
+            rs = true;
+            return rs;
+        } catch (SQLException e1) {
+            e1.printStackTrace();
+        }
+        return rs;
+    }
 }

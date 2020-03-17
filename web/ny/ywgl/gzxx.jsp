@@ -86,9 +86,9 @@ function doDBClick(url,operator,type) {
         <td align="center" nowrap>${employer.status}</td>
         <td align="center" nowrap>${employer.inputdate}</td>
         <td align="center" nowrap>
-          <a href="${pageContext.request.contextPath}/ny/ywgl/gzxx_ck.htm">查看</a>
-          <a href="${pageContext.request.contextPath}/ny/ywgl/gzxx_xg.htm">修改</a>
-          <a href="lsda.htm">历史档案</a>
+          <a href="${pageContext.request.contextPath}/YwglSvl?reqType=seeEmployer&eid=${employer.id}">查看</a>
+          <a href="${pageContext.request.contextPath}/YwglSvl?reqType=modEmployer1&eid=${employer.id}">修改</a>
+          <a href="${pageContext.request.contextPath}/ny/ywgl/lsda.htm">历史档案</a>
         </td>
       </tr>
     </c:forEach>

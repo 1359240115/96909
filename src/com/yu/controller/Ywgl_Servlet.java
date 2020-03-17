@@ -38,6 +38,62 @@ public class Ywgl_Servlet extends HttpServlet {
             queryEmployerByJS(request,response);
         }else if (reqType.equals("insert")){
             insertEmployer(request,response);
+        }else if (reqType.equals("seeEmployer")){
+            seeEmployerByid(request,response);
+        }else if (reqType.equals("modEmployer1")){
+            Employer employer = service.seeEmployerByid(request.getParameter("eid"));
+            if (employer!=null){
+                request.setAttribute("employer",employer);
+                request.getRequestDispatcher("/ny/ywgl/gzxx_xg.jsp").forward(request,response);
+            }
+        }else if (reqType.equals("update")){
+            updateEmployer(request,response);
+        }
+    }
+
+    //修改客户信息
+    private void updateEmployer(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        Employer employer = new Employer();
+        employer.setName(request.getParameter("e_name"));
+        employer.setHetonghao(request.getParameter("contractid"));
+        employer.setSex(request.getParameter("sex"));
+        employer.setAge(request.getParameter("age"));
+        employer.setMingzu(request.getParameter("nation"));//民族
+        employer.setJiguan(request.getParameter("native"));//籍贯
+        employer.setXueli(request.getParameter("education"));//学历
+        employer.setIdcard(request.getParameter("idcard"));
+        employer.setWorkspace(request.getParameter("workspace"));//工作单位
+        employer.setZhiye(request.getParameter("occupation"));//职业
+        employer.setHetongqixian(request.getParameter("contractdate"));//合同期
+        employer.setPhone(request.getParameter("telphone"));
+        employer.setHome(request.getParameter("hkszd"));//户口所在地
+        employer.setAddress(request.getParameter("address"));//服务地址
+        employer.setJtrs(request.getParameter("jtrs"));//家庭人数
+        employer.setFwnr(request.getParameter("fwnr"));
+        employer.setFwmj(request.getParameter("fwmj"));//房屋面积
+        employer.setYsxg(request.getParameter("ysxg"));//饮食习惯
+        employer.setQita(request.getParameter("qita"));
+        employer.setMinprice(request.getParameter("minprice"));
+        employer.setMaxprice(request.getParameter("maxprice"));
+        employer.setJingbanren(request.getParameter("chargeman"));//经办人
+        employer.setInputdate(request.getParameter("inputtime"));//录入时间
+
+        boolean b = service.updateEmployerByhetonghao(employer);
+        if (b){
+            response.sendRedirect("YwglSvl?reqType=khgl");
+        }else {
+            response.setContentType("text/html;charset=UTF-8");
+            response.getWriter().print("<script>window.alert('修改失败！');window.history.back()</script>");
+        }
+    }
+
+    //查看某个客户的具体信息
+    private void seeEmployerByid(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String id = request.getParameter("eid");
+        Employer employer = service.seeEmployerByid(id);
+        if (employer!=null){
+            request.setAttribute("employer",employer);
+            request.getRequestDispatcher("/ny/ywgl/gzxx_ck.jsp").forward(request,response);
         }
     }
 
@@ -80,7 +136,8 @@ public class Ywgl_Servlet extends HttpServlet {
         employer.setQita(request.getParameter("qita"));
         employer.setMinprice(request.getParameter("minprice"));
         employer.setMaxprice(request.getParameter("maxprice"));
-        employer.setJingbanren("chargeman");//经办人
+        employer.setJingbanren(request.getParameter("chargeman"));//经办人
+        employer.setHome(request.getParameter("hkszd"));
         if (request.getParameterValues("workertype")!=null){
             String wType = "";
             for (int i = 0; i < request.getParameterValues("workertype").length; i++) {
@@ -95,7 +152,7 @@ public class Ywgl_Servlet extends HttpServlet {
         employer.setInputdate(request.getParameter("inputtime"));//录入时间
 
 
-        boolean b = service.addEmployer(employer,"123");
+        boolean b = service.addEmployer(employer);
         if (b){
             response.sendRedirect("YwglSvl?reqType=khgl");
         }else {

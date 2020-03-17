@@ -13,5 +13,9 @@ public interface YwglService {
 
     List<Employer> queryEmployerByJS(Employer employer);
 
-    boolean addEmployer(Employer employer,String account);
+    boolean addEmployer(Employer employer);
+
+    Employer seeEmployerByid(String id);
+
+    boolean updateEmployerByhetonghao(Employer employer);
 }

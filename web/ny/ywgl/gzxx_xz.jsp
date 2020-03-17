@@ -133,15 +133,15 @@ function doDBClick(url,operator,type) {
           <td align="left" bgcolor="#FFFFFF">&nbsp;</td>
           <td align="right" bgcolor="#FFFFFF">&nbsp;</td>
           <td colspan="3" bgcolor="#FFFFFF">&nbsp;</td>
-         </tr>s
+         </tr>
            <tr>
           <td align="right" nowrap bgcolor="#FFFFFF">雇用：</td>
           <td colspan="7" bgcolor="#FFFFFF"><input type="checkbox" name="workertype" value="月嫂"/>
             月嫂&nbsp;
             <input type="checkbox" name="workertype" value="保姆" />
             保姆&nbsp;&nbsp;
-            <input type="checkbox" name="workertype"  value="钟点"/>
-            钟点&nbsp;&nbsp;
+            <input type="checkbox" name="workertype"  value="钟点工"/>
+            钟点工&nbsp;&nbsp;
             <input type="checkbox" name="workertype" value="厨嫂" />
             厨嫂
             <input type="checkbox" name="workertype" value="清洁工"/>
@@ -161,7 +161,7 @@ function doDBClick(url,operator,type) {
         </tr>
         <tr>
           <td align="right" nowrap bgcolor="#FFFFFF">经办人：</td>
-          <td colspan="7" align="left" bgcolor="#FFFFFF"><input name="chargeman" type="text" id="textarea21" value="" size="65" class="pi"></td>
+          <td colspan="7" align="left" bgcolor="#FFFFFF"><input name="chargeman" type="text" id="textarea21" size="65" class="pi"></td>
         </tr>
         <tr>
           <td align="right" nowrap bgcolor="#FFFFFF">登记日期：</td>

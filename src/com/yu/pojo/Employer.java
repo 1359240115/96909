@@ -32,6 +32,15 @@ public class Employer {
     private String fwnr;//服务内容
     private String ysxg;
     private String qita;//家庭内容
+    private String home;
+
+    public String getHome() {
+        return home;
+    }
+
+    public void setHome(String home) {
+        this.home = home;
+    }
 
     public Employer() {
     }
