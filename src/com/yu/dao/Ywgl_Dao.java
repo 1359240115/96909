@@ -1,9 +1,11 @@
 package com.yu.dao;
 
+import com.yu.pojo.Company;
 import com.yu.pojo.Employer;
 import com.yu.pojo.Worker;
 import com.yu.util.DbPool;
 
+import javax.servlet.http.HttpSession;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -110,14 +112,14 @@ public class Ywgl_Dao {
             List<Employer> employerList = new ArrayList<>();
             while (rs!=null&rs.next()){
                 Employer employer = new Employer();
-                employer.setId(rs.getInt(1));
+                employer.setId(rs.getString(1));
                 employer.setName(rs.getString(2));
                 employer.setSex(rs.getString(3));
-                employer.setAge(rs.getInt(4));
+                employer.setAge(rs.getString(4));
                 employer.setYaoqiu(rs.getString(5));
-                employer.setMinprice(rs.getInt(6));
-                employer.setMaxprice(rs.getInt(7));
-                employer.setInputdate(rs.getDate(8));
+                employer.setMinprice(rs.getString(6));
+                employer.setMaxprice(rs.getString(7));
+                employer.setInputdate(rs.getString(8));
                 employer.setStatus(employerStatus(employer.getId()));
                 employerList.add(employer);
             }
@@ -133,7 +135,7 @@ public class Ywgl_Dao {
     //返回雇主状态的方法
     //只需要在交易记录表里面查找是否有雇主的信息
     //返回一个“已雇佣”或“待雇佣”的字符串。
-    private String employerStatus(int e_id){
+    private String employerStatus(String e_id){
         String sql = "select * from transaction where e_id=?";
         Connection con = DbPool.getConnection();
         PreparedStatement pst = null;
@@ -195,14 +197,14 @@ public class Ywgl_Dao {
             List<Employer> employerList = new ArrayList<>();
             while (rs!=null&rs.next()){
                 Employer rsemployer = new Employer();
-                rsemployer.setId(rs.getInt(1));
+                rsemployer.setId(rs.getString(1));
                 rsemployer.setName(rs.getString(2));
                 rsemployer.setSex(rs.getString(3));
-                rsemployer.setAge(rs.getInt(4));
+                rsemployer.setAge(rs.getString(4));
                 rsemployer.setYaoqiu(rs.getString(5));
-                rsemployer.setMinprice(rs.getInt(6));
-                rsemployer.setMaxprice(rs.getInt(7));
-                rsemployer.setInputdate(rs.getDate(8));
+                rsemployer.setMinprice(rs.getString(6));
+                rsemployer.setMaxprice(rs.getString(7));
+                rsemployer.setInputdate(rs.getString(8));
                 rsemployer.setStatus(employerStatus(rsemployer.getId()));
                 //此处做判断，判断查询条件中的客户状态是否为空
                 //1.如果不为空再做一个判断，判断结果集中的客户状态是否和条件中的状态一致
@@ -225,4 +227,31 @@ public class Ywgl_Dao {
         }
         return null;
     }
+
+    //业务管理下的增加新客户
+    public Boolean addEmployer(Employer e,String c_account){
+        String sql = "insert into employer(c_id,e_name,e_contractid,e_maxprice,e_minprice,e_sex,e_age,e_nation,e_native,e_education,e_idcard,e_occupation,e_contractdate,e_phone,e_address,e_requirement,e_chargeman,e_inputdate,e_workspace,e_home,e_jtrs,e_fwnr,e_jtmj,e_ysxg,e_qita) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        PreparedStatement pst = null;
+        Boolean rs = false;
+        Connection con = DbPool.getConnection();
+        try {
+            con.setAutoCommit(false);
+            pst = con.prepareStatement(sql);
+            dao.execUpdate(pst,e.getC_id(),e.getName(),e.getHetonghao(),e.getMaxprice(),e.getMinprice(),e.getSex(),e.getAge(),e.getMingzu(),e.getJiguan(),e.getXueli(),e.getIdcard(),e.getZhiye(),e.getHetongqixian(),e.getPhone(),e.getAddress(),String.valueOf(e.getYaoqiu()),e.getJingbanren(),e.getInputdate(),e.getWorkspace(),e.getAddress(),e.getJtrs(),e.getFwnr(),e.getFwmj(),e.getYsxg(),e.getQita());
+            con.commit();
+            rs = true;
+            return rs;
+        } catch (SQLException e1) {
+            try {
+                con.rollback();
+            } catch (SQLException e2) {
+                e2.printStackTrace();
+            }
+            e1.printStackTrace();
+        }finally {
+            dao.releaseResource(con,pst,null);
+        }
+        return rs;
+    }
+
 }

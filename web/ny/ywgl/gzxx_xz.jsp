@@ -53,7 +53,7 @@ function doDBClick(url,operator,type) {
           </td>
           <td width="10%" align="right" bgcolor="#FFFFFF">性别：</td>
           <td width="17%" bgcolor="#FFFFFF">
-              <input type="radio" name="sex" id="radio12" value="男">男
+              <input type="radio" name="sex" checked="checked" id="radio12" value="男">男
               <input type="radio" name="sex" id="radio13" value="女">女
           </td>
           <td width="10%" align="right" bgcolor="#FFFFFF">年龄：</td>
@@ -136,26 +136,26 @@ function doDBClick(url,operator,type) {
          </tr>s
            <tr>
           <td align="right" nowrap bgcolor="#FFFFFF">雇用：</td>
-          <td colspan="7" bgcolor="#FFFFFF"><input type="checkbox" name="workertype" />
+          <td colspan="7" bgcolor="#FFFFFF"><input type="checkbox" name="workertype" value="月嫂"/>
             月嫂&nbsp;
-            <input type="checkbox" name="workertype"  />
+            <input type="checkbox" name="workertype" value="保姆" />
             保姆&nbsp;&nbsp;
-            <input type="checkbox" name="workertype"  />
+            <input type="checkbox" name="workertype"  value="钟点"/>
             钟点&nbsp;&nbsp;
-            <input type="checkbox" name="workertype"  />
+            <input type="checkbox" name="workertype" value="厨嫂" />
             厨嫂
-            <input type="checkbox" name="workertype" />
+            <input type="checkbox" name="workertype" value="清洁工"/>
             清洁工
             &nbsp;
-            <input type="checkbox" name="workertype" />
+            <input type="checkbox" name="workertype" value="护工"/>
              护工&nbsp;&nbsp;
-             <input type="checkbox" name="workertype"/>
+             <input type="checkbox" name="workertype" value="早教"/>
              早教
             &nbsp;&nbsp;
-            <input type="checkbox" name="workertype"  />
+            <input type="checkbox" name="workertype" value="家教" />
             家教
             &nbsp;&nbsp;
-            <input type="checkbox" name="workertype" />
+            <input type="checkbox" name="workertype" value="高级管家"/>
             高级管家<br>
           </td>
         </tr>

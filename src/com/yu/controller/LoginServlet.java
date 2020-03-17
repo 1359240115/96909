@@ -34,7 +34,7 @@ public class LoginServlet extends HttpServlet {
         user.setPassword(password);
         boolean rs = service.CheckUser(user);
         if (rs){
-            request.getSession().setAttribute("user",Integer.valueOf(username));
+            request.getSession().setAttribute("user",username);
             request.getRequestDispatcher("ny/index.html").forward(request,response);
         }else {
             request.setAttribute("info","账号或密码错误");

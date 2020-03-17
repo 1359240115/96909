@@ -1,5 +1,7 @@
 package com.yu.controller;
 
+
+import com.yu.pojo.Company;
 import com.yu.pojo.Employer;
 import com.yu.pojo.Worker;
 import com.yu.service.YwglService;
@@ -10,8 +12,12 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,47 +43,64 @@ public class Ywgl_Servlet extends HttpServlet {
 
 
     //新增客户
-    private void insertEmployer(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    private void insertEmployer(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         Employer employer = new Employer();
-        employer.setSex(request.getParameter("sex"));
-        employer.setAge(request.getIntHeader("age"));
-        employer.setMingzu(request.getParameter("nation"));//民族
-        employer.setJiguan( request.getParameter("native"));//籍贯
-        employer.setXueli(request.getParameter("education"));//学历
-        employer.setIdcard(request.getIntHeader("idcard"));
-        employer.setWorkspace(request.getParameter("workspace"));//工作单位
-        employer.setZhiye(request.getParameter("occupation"));//职业
-        employer.setHetongqixian(Date.valueOf(request.getParameter("contractdate")));//合同期限
-        employer.setPhone(Integer.valueOf(request.getParameter("telphone")));
-        employer.setAddress( request.getParameter("address"));//服务地址
-        employer.setJtrs(request.getIntHeader("jtrs"));//家庭人数
-        employer.setFwnr(request.getParameter("fwnr"));
-        employer.setFwmj(request.getIntHeader("fwmj"));//房屋面积
-        employer.setYsxg(request.getParameter("ysxg"));//饮食习惯
-        employer.setQita(request.getParameter("qita"));
-        employer.setMinprice(request.getIntHeader("minprice"));
-        employer.setMaxprice(request.getIntHeader("maxprice"));
-        employer.setYaoqiu(request.getParameterValues("workertype").toString());//类型
-        employer.setJingbanren((Integer) request.getSession().getAttribute("user"));//经办人
-        if (!request.getParameter("chargeman").isEmpty()){
-            Object user = request.getSession().getAttribute("user");
-            if (user.equals("123")){
-
-            }
-        }
-        employer.setInputdate(Date.valueOf(request.getParameter("inputtime")));//录入时间
+        String username = String.valueOf(request.getSession().getAttribute("user"));
+        String c_id = String.valueOf(queryCompany(username));
+        employer.setC_id(c_id);
         if (request.getParameter("e_name").isEmpty()){
             response.setContentType("text/html;charset=UTF-8");
             response.getWriter().print("<script>window.alert('请正确填写姓名！');window.history.back()</script>");
+            return;
         }else {
             employer.setName(request.getParameter("e_name"));
         }
-        employer.setHetonghao(request.getParameter("contractid"));//合同号
         if (request.getParameter("contractid").isEmpty()){
             response.setContentType("text/html;charset=UTF-8");
             response.getWriter().print("<script>window.alert('请填写合同号！');window.history.back()</script>");
+            return;
         }else {
-            employer.setName(request.getParameter("e_name"));
+            employer.setHetonghao(request.getParameter("contractid"));//合同号
+        }
+        employer.setSex(request.getParameter("sex"));
+        employer.setAge(request.getParameter("age"));
+        employer.setMingzu(request.getParameter("nation"));//民族
+        employer.setJiguan(request.getParameter("native"));//籍贯
+        employer.setXueli(request.getParameter("education"));//学历
+        employer.setIdcard(request.getParameter("idcard"));
+        employer.setWorkspace(request.getParameter("workspace"));//工作单位
+        employer.setZhiye(request.getParameter("occupation"));//职业
+        employer.setHetongqixian(request.getParameter("contractdate"));//合同期
+        employer.setPhone(request.getParameter("telphone"));
+        employer.setAddress(request.getParameter("address"));//服务地址
+        employer.setJtrs(request.getParameter("jtrs"));//家庭人数
+        employer.setFwnr(request.getParameter("fwnr"));
+        employer.setFwmj(request.getParameter("fwmj"));//房屋面积
+        employer.setYsxg(request.getParameter("ysxg"));//饮食习惯
+        employer.setQita(request.getParameter("qita"));
+        employer.setMinprice(request.getParameter("minprice"));
+        employer.setMaxprice(request.getParameter("maxprice"));
+        employer.setJingbanren("chargeman");//经办人
+        if (request.getParameterValues("workertype")!=null){
+            String wType = "";
+            for (int i = 0; i < request.getParameterValues("workertype").length; i++) {
+                wType += request.getParameterValues("workertype")[i]+",";
+            }
+            if (!wType.trim().isEmpty()){
+                employer.setYaoqiu(wType.substring(0,wType.length()-1));//类型
+            }
+        }else {
+            employer.setYaoqiu("");
+        }
+        employer.setInputdate(request.getParameter("inputtime"));//录入时间
+
+
+        boolean b = service.addEmployer(employer,"123");
+        if (b){
+            response.sendRedirect("YwglSvl?reqType=khgl");
+        }else {
+            response.setContentType("text/html;charset=UTF-8");
+            response.getWriter().print("<script>window.alert('添加失败！');window.history.back()</script>");
         }
     }
 
@@ -89,7 +112,7 @@ public class Ywgl_Servlet extends HttpServlet {
         employer.setName(request.getParameter("searchName"));
         employer.setSex(request.getParameter("radio"));
         if (!"".equals(telphone)){
-            employer.setPhone(Integer.parseInt(telphone));
+            employer.setPhone(telphone);
         }
         if (!request.getParameter("select").equals("请选择")){
             employer.setStatus(request.getParameter("select"));
@@ -149,5 +172,15 @@ public class Ywgl_Servlet extends HttpServlet {
             response.setContentType("text/html;charset=UTF-8");
             response.getWriter().print("<script>window.alert('无此类人员！');window.history.back()</script>");
         }
+    }
+
+    //判断当前的账户属于哪个公司
+    private int queryCompany(String username){
+        int c_id =0;
+        switch (username){
+            case "123": c_id=1;break;
+            case "456": c_id=2;break;
+        }
+        return c_id;
     }
 }

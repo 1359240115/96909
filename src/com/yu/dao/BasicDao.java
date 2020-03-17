@@ -28,6 +28,9 @@ public class BasicDao {
     public void execUpdate(PreparedStatement pst,Object...params) throws SQLException {
         if (params != null) {
             for (int i = 0; i < params.length; i++) {
+                if (params[i].equals("")){
+                    params[i]=null;
+                }
                 pst.setObject(i + 1, params[i]);
             }
         }

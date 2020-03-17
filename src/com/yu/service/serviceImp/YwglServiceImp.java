@@ -23,4 +23,9 @@ public class YwglServiceImp implements YwglService {
     public List<Employer> queryEmployerByJS(Employer employer) {
         return dao.queryEmployerByJS(employer);
     }
+
+    @Override
+    public boolean addEmployer(Employer employer,String account) {
+        return dao.addEmployer(employer,account);
+    }
 }

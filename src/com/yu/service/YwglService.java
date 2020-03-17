@@ -12,4 +12,6 @@ public interface YwglService {
     List<Employer> queryEmployer();
 
     List<Employer> queryEmployerByJS(Employer employer);
+
+    boolean addEmployer(Employer employer,String account);
 }
