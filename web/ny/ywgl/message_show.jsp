@@ -1,4 +1,6 @@
-   <link href="../css/index.css" rel="stylesheet" type="text/css">
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<link href="../css/index.css" rel="stylesheet" type="text/css">
 <html>
 <style type="text/css">
 <!--
@@ -29,7 +31,7 @@ function doDBClick(url,operator,type) {
 
 <table width="100%"  border="0" cellpadding="0" cellspacing="0" bordercolor="#FFFFFF" class="where">
   <tr>
-    <td>&nbsp;&nbsp;¡ù&nbsp;ÄúµÄÎ»ÖÃ£ºÎÒµÄ×ÀÃæ--&gt;ÒµÎñ¹ÜÀí--&gt;ÄÚ²¿¶ÌÏûÏ¢</td>
+    <td>&nbsp;&nbsp;â€»&nbsp;æ‚¨çš„ä½ç½®ï¼šæˆ‘çš„æ¡Œé¢--&gt;ä¸šåŠ¡ç®¡ç†--&gt;å†…éƒ¨çŸ­æ¶ˆæ¯</td>
     <td align="right">&nbsp;</td>
   </tr>
 </table>
@@ -38,19 +40,19 @@ function doDBClick(url,operator,type) {
   <table width="96%" height="49" border="0" align="center" cellpadding="0" cellspacing="1" bgcolor="#bdc7d3" class="text_lb">
     
     <tr>
-      <td width="73" height="23" align="right" bgcolor="#FFFFFF">±êÌâ£º</td>
-      <td width="668" bgcolor="#FFFFFF"><input name="textarea" type="text" id="textarea" value="¾Û²Í" size="30" class="pi"></td>
+      <td width="73" height="23" align="right" bgcolor="#FFFFFF">æ ‡é¢˜ï¼š</td>
+      <td width="668" bgcolor="#FFFFFF"><input name="textarea" type="text" id="textarea" value="${message.title}" size="30" class="pi"></td>
     </tr>
     <tr>
-      <td height="23" align="right" bgcolor="#FFFFFF">ÄÚÈİ£º</td>
+      <td height="23" align="right" bgcolor="#FFFFFF">å†…å®¹ï¼š</td>
       <td bgcolor="#FFFFFF"><textarea name="textarea7" id="textarea7" cols="45" rows="10">
-      ½ñÌìÍíÉÏ7µãÈËÃñ¹ã³¡ÖØÇìºıÍ¿ÏÉÏãÀ±Ğ·¾Û²ÍÀ²£¬·ÑÓÃAAÖÆ...
+      ${message.context}
       </textarea></td>
     </tr>
   </table>
 <table width="96%" height="30" border="0" align="center" cellpadding="0" cellspacing="0" >
   <tr>
-    <td width="67%" align="center" class="text" nowrap><input type="submit" name="searchbtn3" value="·µ  »Ø" class="button_new" onClick="javascript:location.href='gsgl.htm'" >
+    <td width="67%" align="center" class="text" nowrap><input type="submit" name="searchbtn3" value="è¿”  å›" class="button_new" onClick="javascript:window.location.href='/96909/YwglSvl?reqType=messagelist'" >
       <input type="hidden" name="mod" value="no">
     &nbsp;&nbsp; </td>
   </tr>

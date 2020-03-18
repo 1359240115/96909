@@ -1,16 +1,19 @@
 package com.yu.dao;
 
-import com.yu.pojo.Company;
 import com.yu.pojo.Employer;
+import com.yu.pojo.MessageBean;
+import com.yu.pojo.NoticeMrtz;
 import com.yu.pojo.Worker;
 import com.yu.util.DbPool;
 
-import javax.servlet.http.HttpSession;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class Ywgl_Dao {
@@ -102,7 +105,7 @@ public class Ywgl_Dao {
 
     //业务管理下的客户管理主页面
     public List<Employer> queryAllEmployer(){
-        String sql = "select e_id,e_name,e_sex,e_age,e_requirement,e_minprice,e_maxprice,e_inputdate from employer";
+        String sql = "select e_id,e_name,e_sex,e_age,e_requirement,e_minprice,e_maxprice,e_inputdate,e_birthday,e_phone from employer";
         PreparedStatement pst = null;
         ResultSet rs = null;
         Connection con = DbPool.getConnection();
@@ -120,6 +123,8 @@ public class Ywgl_Dao {
                 employer.setMinprice(rs.getString(6));
                 employer.setMaxprice(rs.getString(7));
                 employer.setInputdate(rs.getString(8));
+                employer.setBirthday(rs.getString(9));
+                employer.setPhone(rs.getString(10));
                 employer.setStatus(employerStatus(employer.getId()));
                 employerList.add(employer);
             }
@@ -317,5 +322,155 @@ public class Ywgl_Dao {
             e1.printStackTrace();
         }
         return rs;
+    }
+
+    //查找所有通知
+    public List<NoticeMrtz> showAllNotice(){
+        //格式化日期
+        Date date = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        //取到今年的年份
+        String dateStr = sdf.format(date).substring(0,4);
+        List<NoticeMrtz> noticeList = new ArrayList<>();
+        Ywgl_Dao ywglDao = new Ywgl_Dao();
+        //取到所有客户的信息
+        List<Employer> employerList = ywglDao.queryAllEmployer();
+        //对客户信息进行迭代，把每个客户的生日通知存到通知集合中；
+        for (int i = 0; i < employerList.size(); i++) {
+            //拼接祝福语
+            String context = "客户"+employerList.get(i).getName()+"("+employerList.get(i).getPhone()+")今天过生日，快送去最美的祝福吧！";
+            NoticeMrtz notice = new NoticeMrtz();
+            String birthday = null;
+            if (employerList.get(i).getBirthday()!=null){
+                notice.setContext(context);
+                //拼接通知的日期
+                birthday = dateStr +"-" + employerList.get(i).getBirthday().substring(5,10);
+                notice.setNoticeTime(birthday);
+            }
+
+            //date1表示当前的日期，用来和发出通知的日期做比较，如果到达当前的日期，则可以发出通知
+            Date date1 = new Date();
+            try {
+               date1 = sdf.parse(birthday) ;
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            if (date1.getTime() < date.getTime()){
+                noticeList.add(notice);
+            }
+        }
+        //对已经发出的通知作排序
+        for (int i = 0; i < noticeList.size()-1; i++) {
+            NoticeMrtz notice = new NoticeMrtz();
+            try {
+                Date date1 = sdf.parse(noticeList.get(i).getNoticeTime());
+                Date date2 = sdf.parse(noticeList.get(i+1).getNoticeTime());
+                if (date1.getTime()<date2.getTime()){
+                    notice = noticeList.get(i);
+                    noticeList.set(i,noticeList.get(i+1));
+                    noticeList.set(i+1,notice);
+                }
+                noticeList.get(i).setId(i+1);
+                noticeList.get(i+1).setId(i+2);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+        return noticeList;
+    }
+
+    //把通知写到数据库
+    public void insertNotice(List<NoticeMrtz> noticeMrtzList){
+        String sql = "insert into notice values(?,?,?)";
+        Connection con = DbPool.getConnection();
+        PreparedStatement pst = null;
+        try {
+            con.setAutoCommit(false);
+            pst = con.prepareStatement(sql);
+            for (int i = 0; i < noticeMrtzList.size(); i++) {
+                dao.execUpdate(pst,noticeMrtzList.get(i).getId(),
+                        noticeMrtzList.get(i).getContext(),
+                        noticeMrtzList.get(i).getNoticeTime());
+            }
+            con.commit();
+        } catch (SQLException e) {
+            try {
+                con.rollback();
+            } catch (SQLException e1) {
+                e1.printStackTrace();
+            }
+            e.printStackTrace();
+        }finally {
+            dao.releaseResource(con,pst,null);
+        }
+    }
+
+    //查看所有的内部消息
+    public List<MessageBean> queryAllMessage(String jieshouren){
+        String sql = "select distinct m.*,c.fssj from message m,msgcontext c WHERE m.jieshouren =(SELECT name from account where userid=?)";
+        Connection con = DbPool.getConnection();
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        try {
+            pst = con.prepareStatement(sql);
+            rs = dao.execQuery(pst,jieshouren);
+            List<MessageBean> messageList = new ArrayList<>();
+            while (rs!=null&rs.next()){
+                MessageBean message = new MessageBean();
+                message.setId(Integer.parseInt(rs.getString(1)));
+                message.setMid(rs.getInt(2));
+                message.setTitle(rs.getString(3));
+                message.setFasongren(rs.getString(4));
+                message.setJieshouren(rs.getString(5));
+                if (rs.getInt(6)==0){
+                    message.setStatus("未读");
+                }else {
+                    message.setStatus("已读");
+                }
+                message.setFssj(rs.getString(7));
+                messageList.add(message);
+            }
+            return messageList;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+            dao.releaseResource(con,pst,rs);
+        }
+        return null;
+    }
+
+    //查看单个消息内容
+    public MessageBean queryMessageByMid(int mid){
+        String sql = "select * from msgcontext where msgid = ?";
+        Connection con = DbPool.getConnection();
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        try {
+            pst = con.prepareStatement(sql);
+            rs = dao.execQuery(pst,mid);
+            if (rs!=null&rs.next()){
+                MessageBean message = new MessageBean();
+                message.setTitle(rs.getString(2));
+                message.setContext(rs.getString(3));
+                message.setStatus("已读");
+                String sql2 ="UPDATE message set msg_status=1 where msgid = ?";
+                con.setAutoCommit(false);
+                pst = con.prepareStatement(sql2);
+                dao.execUpdate(pst,mid);
+                con.commit();
+                return message;
+            }
+        } catch (SQLException e) {
+            try {
+                con.rollback();
+            } catch (SQLException e1) {
+                e1.printStackTrace();
+            }
+            e.printStackTrace();
+        }finally {
+            dao.releaseResource(con,pst,rs);
+        }
+        return null;
     }
 }

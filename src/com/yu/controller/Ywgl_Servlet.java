@@ -1,9 +1,7 @@
 package com.yu.controller;
 
 
-import com.yu.pojo.Company;
-import com.yu.pojo.Employer;
-import com.yu.pojo.Worker;
+import com.yu.pojo.*;
 import com.yu.service.YwglService;
 import com.yu.service.serviceImp.YwglServiceImp;
 
@@ -48,7 +46,37 @@ public class Ywgl_Servlet extends HttpServlet {
             }
         }else if (reqType.equals("update")){
             updateEmployer(request,response);
+        }else if (reqType.equals("notice")){
+            showNotice(request,response);
+        }else if (reqType.equals("messagelist")){
+            showAllmassage(request,response);
+        }else if (reqType.equals("showMessage")){
+            showMessageBymid(request,response);
         }
+    }
+
+    //查看某条具体的消息
+    private void showMessageBymid(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        int mid = Integer.parseInt(request.getParameter("mid"));
+        MessageBean message = service.showMessageByMid(mid);
+        request.setAttribute("message",message);
+        request.getRequestDispatcher("/ny/ywgl/message_show.jsp").forward(request,response);
+    }
+
+    //查看当前用户接收到的所有的消息
+    private void showAllmassage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String jieshouren = String.valueOf(request.getSession().getAttribute("user"));
+        List<MessageBean> messageList = service.messageList(jieshouren);
+        request.setAttribute("messageList",messageList);
+        request.getRequestDispatcher("/ny/ywgl/message_list.jsp").forward(request,response);
+    }
+
+    //查看每日通知，客户和工人的生日
+    private void showNotice(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        List<NoticeMrtz> noticeList = new ArrayList<>();
+        noticeList = service.showAllNotice();
+        request.setAttribute("noticeList",noticeList);
+        request.getRequestDispatcher("/ny/ywgl/mrtz.jsp").forward(request,response);
     }
 
     //修改客户信息
@@ -237,6 +265,7 @@ public class Ywgl_Servlet extends HttpServlet {
         switch (username){
             case "123": c_id=1;break;
             case "456": c_id=2;break;
+            case "789": c_id=3;break;
         }
         return c_id;
     }

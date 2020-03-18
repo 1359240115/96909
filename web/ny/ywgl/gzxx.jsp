@@ -53,7 +53,7 @@ function doDBClick(url,operator,type) {
           <option>保姆</option>
           <option>月嫂</option>
           <option>家教</option>
-          <option>钟点工</option>
+          <option>钟点</option>
         </select>
         <input type="submit" value="查  询" class="button_new">
         <input type="button" name="searchbtn2" value="新  增" class="button_new"onClick="javascript:location.href='/96909/ny/ywgl/gzxx_xz.jsp'" >
@@ -76,7 +76,7 @@ function doDBClick(url,operator,type) {
       <td width="10%" align="center" nowrap id=".submit_date" ><strong>操作</strong></td>
     </tr>
     <c:forEach  items="${employers}" var="employer">
-      <tr align="center" class="td2"  onmouseover="javascript:changeBgColorOnMouseOver(this);" onMouseOut="javascript:changeBgColorOnMouseOut(this);" onDblClick="doDBClick('bl.htm',true,'2');">
+      <tr align="center" class="td2"  onmouseover="javascript:changeBgColorOnMouseOver(this);" onMouseOut="javascript:changeBgColorOnMouseOut(this);">
         <td nowrap align="center" width="3%">${employer.id}</td>
         <td align="center" nowrap>${employer.name}</td>
         <td height="14" align="center" nowrap>${employer.sex}</td>

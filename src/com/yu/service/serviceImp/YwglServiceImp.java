@@ -2,6 +2,8 @@ package com.yu.service.serviceImp;
 
 import com.yu.dao.Ywgl_Dao;
 import com.yu.pojo.Employer;
+import com.yu.pojo.MessageBean;
+import com.yu.pojo.NoticeMrtz;
 import com.yu.pojo.Worker;
 import com.yu.service.YwglService;
 
@@ -37,5 +39,20 @@ public class YwglServiceImp implements YwglService {
     @Override
     public boolean updateEmployerByhetonghao(Employer employer) {
         return dao.updateEmployerByhetonghao(employer);
+    }
+
+    @Override
+    public List<NoticeMrtz> showAllNotice() {
+        return dao.showAllNotice();
+    }
+
+    @Override
+    public List<MessageBean> messageList(String jieshouren) {
+        return dao.queryAllMessage(jieshouren);
+    }
+
+    @Override
+    public MessageBean showMessageByMid(int mid) {
+        return dao.queryMessageByMid(mid);
     }
 }

@@ -10,6 +10,11 @@
     <file url="file://$PROJECT_DIR$/web/ny/ywgl/gzxx_ck.jsp" charset="GBK" />
     <file url="file://$PROJECT_DIR$/web/ny/ywgl/gzxx_xg.jsp" charset="GBK" />
     <file url="file://$PROJECT_DIR$/web/ny/ywgl/gzxx_xz.jsp" charset="GBK" />
-    <file url="file://$PROJECT_DIR$/web/ny/ywgl/message_show.html" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/web/ny/ywgl/menu_ywgl.htm.bak" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/web/ny/ywgl/message_list.jsp" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/web/ny/ywgl/message_list.jsp" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/web/ny/ywgl/message_show.jsp" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/web/ny/ywgl/mrtz.jsp" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/web/ny/ywgl/mrtz_ck.htm" charset="GBK" />
   </component>
 </project>
