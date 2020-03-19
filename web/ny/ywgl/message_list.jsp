@@ -63,11 +63,11 @@ function doDBClick(url,operator,type) {
         <td align="center" nowrap>${message.fasongren}</td>
         <td align="center" nowrap> ${message.status}</td>
         <td height="14" align="center" nowrap>${message.fssj}</td>
-        <td align="center" nowrap><a href="ny/ywgl/message_add.html">回复</a>&nbsp;</td>
+        <td align="center" nowrap><a href="ny/ywgl/message_reply.jsp?jsr=${message.fasongren}">回复</a>&nbsp;</td>
       </tr>
     </c:forEach>
   </table>
-<table width="96%" height="10"  border="0" align="center" cellpadding="0" cellspacing="0">
+  <table width="96%" height="10"  border="0" align="center" cellpadding="0" cellspacing="0">
     <tr>
       <td><input type="hidden" name="orderType" value="asc">
           <input type="hidden" name="orderFid" value=".submit_date">
@@ -86,6 +86,6 @@ function doDBClick(url,operator,type) {
       </td>
     </tr>
   </table>
-
+${info}
 </body>
 </html>

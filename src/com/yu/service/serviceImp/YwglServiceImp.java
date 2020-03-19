@@ -55,4 +55,9 @@ public class YwglServiceImp implements YwglService {
     public MessageBean showMessageByMid(int mid) {
         return dao.queryMessageByMid(mid);
     }
+
+    @Override
+    public Boolean addMessage(MessageBean messageBean) {
+        return dao.addMessage(messageBean);
+    }
 }

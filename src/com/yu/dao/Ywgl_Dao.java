@@ -473,4 +473,84 @@ public class Ywgl_Dao {
         }
         return null;
     }
+
+    //发送消息的方法
+    public Boolean addMessage(MessageBean message){
+        String sql ="INSERT INTO message(msgid,title,fasongren,jieshouren,msg_status) VALUES(?,?,?,?,0)";
+        Connection con = DbPool.getConnection();
+        PreparedStatement pst = null;
+        Boolean rs = false;
+        Ywgl_Dao ywglDao = new Ywgl_Dao();
+        message.setMid(ywglDao.queryMessageMaxmid());
+        try {
+            con.setAutoCommit(false);
+            pst = con.prepareStatement(sql);
+            dao.execUpdate(pst,message.getMid(),message.getTitle(),message.getFasongren(),message.getJieshouren());
+            con.commit();
+            rs = true;
+            boolean b = ywglDao.addMsgContextBymsgid(message);
+            if (b){
+                return rs;
+            }else {
+                con.rollback();
+            }
+        } catch (SQLException e) {
+            try {
+                con.rollback();
+            } catch (SQLException e1) {
+                e1.printStackTrace();
+            }
+            e.printStackTrace();
+        }finally {
+            dao.releaseResource(con,pst,null);
+        }
+        return false;
+    }
+
+    //通过当前的msgid往msgcontext中写入内容的方法
+    public boolean addMsgContextBymsgid(MessageBean message){
+        String sql ="insert into msgcontext VALUES (?,?,?,?)";
+        Connection con = DbPool.getConnection();
+        PreparedStatement pst = null;
+        Boolean rs = false;
+        try {
+            con.setAutoCommit(false);
+            pst = con.prepareStatement(sql);
+            dao.execUpdate(pst,message.getMid(),message.getTitle(),message.getContext(),message.getFssj());
+            con.commit();
+            rs = true;
+            return rs;
+        } catch (SQLException e) {
+            try {
+                con.rollback();
+            } catch (SQLException e1) {
+                e1.printStackTrace();
+            }
+            e.printStackTrace();
+        }finally {
+            dao.releaseResource(con,pst,null);
+        }
+        return rs;
+    }
+
+    //获取一个当前最大的mid的方法
+    public int queryMessageMaxmid(){
+        String sql ="SELECT msgid from message ORDER BY msgid DESC";
+        Connection con = DbPool.getConnection();
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        try {
+            pst = con.prepareStatement(sql);
+            rs = dao.execQuery(pst,null);
+            if (rs!=null&rs.next()){
+                int msgid = rs.getInt(1)+1;
+                return msgid;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+            dao.releaseResource(con,pst,rs);
+        }
+        return 0;
+    }
 }

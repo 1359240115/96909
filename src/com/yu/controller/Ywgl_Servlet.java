@@ -52,6 +52,35 @@ public class Ywgl_Servlet extends HttpServlet {
             showAllmassage(request,response);
         }else if (reqType.equals("showMessage")){
             showMessageBymid(request,response);
+        }else if (reqType.equals("msgreply")){
+            replyMessage(request,response);
+        }
+    }
+
+    //回复内部消息
+    private void replyMessage(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        String title = request.getParameter("msgtitle");
+        String msgcontext = request.getParameter("msgcontext");
+        String jsr = request.getParameter("jsr");
+        String fsr = String.valueOf(request.getSession().getAttribute("user"));
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = new Date();
+        String fssj = sdf.format(date);
+
+        MessageBean message = new MessageBean();
+        message.setContext(msgcontext);
+        message.setTitle(title);
+        message.setJieshouren(jsr);
+        message.setFasongren(fsr);
+        message.setFssj(fssj);
+
+        Boolean rs = service.addMessage(message);
+        if (rs){
+            response.setContentType("text/html;charset=UTF-8");
+            response.getWriter().print("<script>window.alert('发送成功！');window.location.href='/96909/YwglSvl?reqType=messagelist';</script>");
+        }else {
+            response.setContentType("text/html;charset=UTF-8");
+            response.getWriter().print("<script>window.alert('发送失败！');window.history.back()</script>");
         }
     }
 

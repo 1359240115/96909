@@ -26,4 +26,6 @@ public interface YwglService {
     List<MessageBean> messageList(String jieshouren);
 
     MessageBean showMessageByMid(int mid);
+
+    Boolean addMessage(MessageBean messageBean);
 }
