@@ -4,6 +4,9 @@ package com.yu.controller;
 import com.yu.pojo.*;
 import com.yu.service.YwglService;
 import com.yu.service.serviceImp.YwglServiceImp;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.JSONArray;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -12,12 +15,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.List;
+
+
 
 @WebServlet("/YwglSvl")
 public class Ywgl_Servlet extends HttpServlet {
@@ -54,7 +60,120 @@ public class Ywgl_Servlet extends HttpServlet {
             showMessageBymid(request,response);
         }else if (reqType.equals("msgreply")){
             replyMessage(request,response);
+        }else if (reqType.equals("jsxx")){
+            queryMessageByjs(request,response);
+        }else if (reqType.equals("addMessage")){
+            gotoaddMessage(request,response);
+        }else if (reqType.equals("findjsr")){
+            findjsrBycname(request,response);
+        }else if (reqType.equals("addMessageto")){
+            addMessage(request,response);
         }
+    }
+
+
+    //发送消息
+    private void addMessage(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String msgtitle = request.getParameter("title");
+        String context = request.getParameter("context");
+        String jsr = request.getParameter("username");
+
+        if (jsr==null||msgtitle.trim().isEmpty()||context.trim().isEmpty()){
+            response.setContentType("text/html;charset=UTF-8");
+            response.getWriter().print("<script>window.alert('请正确填写各信息！');window.location.href='/96909/YwglSvl?reqType=addMessage';</script>");
+        }
+        List<User> allUser = service.findAllUser();
+        String fsr = "";
+        int userid = Integer.parseInt(String.valueOf(request.getSession().getAttribute("user")).trim());
+        for (int i = 0; i < allUser.size(); i++) {
+            if (allUser.get(i).getUserid()==userid){
+                fsr = allUser.get(i).getName();
+            }
+        }
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = new Date();
+        String fssj = sdf.format(date);
+
+        MessageBean message = new MessageBean();
+        message.setContext(context);
+        message.setTitle(msgtitle);
+        message.setJieshouren(jsr);
+        message.setFasongren(fsr);
+        message.setFssj(fssj);
+
+        Boolean rs = service.addMessage(message);
+        if (rs){
+            response.setContentType("text/html;charset=UTF-8");
+            response.getWriter().print("<script>window.alert('发送成功！');window.location.href='/96909/YwglSvl?reqType=messagelist';</script>");
+        }else {
+            response.setContentType("text/html;charset=UTF-8");
+            response.getWriter().print("<script>window.alert('发送失败！');window.location.href='/96909/YwglSvl?reqType=addMessage';</script>");
+        }
+    }
+
+
+    //通过公司名称找到属于该公司下的所有工作号
+    private void findjsrBycname(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String cname = request.getParameter("companyname");
+        List<String> users = service.findjsrBycname(cname);
+        response.setContentType("text/html;charset=UTF-8");
+        JSONObject json = new JSONObject();
+        JSONArray array = new JSONArray();
+
+        for (int i = 0; i < users.size(); i++) {
+            JSONObject j = new JSONObject();
+            try {
+                j.put("name",users.get(i));
+                array.put(i,j);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        try {
+            json.put("people",array);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        PrintWriter out=response.getWriter();
+        out.println(json);
+        out.close();
+    }
+
+
+    //发送内部消息的第一步方法
+    private void gotoaddMessage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        List<User> users = service.findAllUser();
+        request.setAttribute("users",users);
+        request.getRequestDispatcher("/ny/ywgl/message_add.jsp").forward(request,response);
+    }
+
+    //检索内部消息
+    private void queryMessageByjs(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String jieshouren = String.valueOf(request.getSession().getAttribute("user"));
+        String fsr = request.getParameter("fsr");
+        String msgstatus = request.getParameter("status");
+        //这是当前用户接收的所有信息集合
+        List<MessageBean> messageBeans = service.messageList(jieshouren);
+        //新建一个List用来存放检索出来的结果
+        List<MessageBean> messageList = new ArrayList<>();
+        
+        //对messageBeans做迭代，找到符合检索要求的消息，存入messageList
+        //首先判断发送人是否为空
+        for (int i = 0; i < messageBeans.size(); i++) {
+            if (!fsr.isEmpty()){
+                if (messageBeans.get(i).getFasongren().equals(fsr) & messageBeans.get(i).getStatus().equals(msgstatus)){
+                    messageList.add(messageBeans.get(i));
+                }
+            }else {
+                if (messageBeans.get(i).getStatus().equals(msgstatus)){
+                    messageList.add(messageBeans.get(i));
+                }
+            }
+        }
+        List<User> users = service.findAllUser();
+        request.setAttribute("users",users);
+        request.setAttribute("messageList",messageList);
+        request.getRequestDispatcher("/ny/ywgl/message_list.jsp").forward(request,response);
     }
 
     //回复内部消息
@@ -62,7 +181,14 @@ public class Ywgl_Servlet extends HttpServlet {
         String title = request.getParameter("msgtitle");
         String msgcontext = request.getParameter("msgcontext");
         String jsr = request.getParameter("jsr");
-        String fsr = String.valueOf(request.getSession().getAttribute("user"));
+        List<User> allUser = service.findAllUser();
+        String fsr = "";
+        int userid = Integer.parseInt(String.valueOf(request.getSession().getAttribute("user")).trim());
+        for (int i = 0; i < allUser.size(); i++) {
+            if (allUser.get(i).getUserid()==userid){
+                fsr = allUser.get(i).getName();
+            }
+        }
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Date date = new Date();
         String fssj = sdf.format(date);
@@ -96,6 +222,8 @@ public class Ywgl_Servlet extends HttpServlet {
     private void showAllmassage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String jieshouren = String.valueOf(request.getSession().getAttribute("user"));
         List<MessageBean> messageList = service.messageList(jieshouren);
+        List<User> users = service.findAllUser();
+        request.setAttribute("users",users);
         request.setAttribute("messageList",messageList);
         request.getRequestDispatcher("/ny/ywgl/message_list.jsp").forward(request,response);
     }

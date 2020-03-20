@@ -27,7 +27,7 @@ public class LoginServlet extends HttpServlet {
     }
 
     private void CheckLogin(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String username = request.getParameter("j_username");
+        String username = request.getParameter("j_username").trim();
         String password = request.getParameter("j_password");
         User user = new User();
         user.setUserid(Integer.valueOf(username));

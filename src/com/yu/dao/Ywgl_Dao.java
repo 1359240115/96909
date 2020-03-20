@@ -1,15 +1,9 @@
 package com.yu.dao;
 
-import com.yu.pojo.Employer;
-import com.yu.pojo.MessageBean;
-import com.yu.pojo.NoticeMrtz;
-import com.yu.pojo.Worker;
+import com.yu.pojo.*;
 import com.yu.util.DbPool;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -346,6 +340,8 @@ public class Ywgl_Dao {
                 //拼接通知的日期
                 birthday = dateStr +"-" + employerList.get(i).getBirthday().substring(5,10);
                 notice.setNoticeTime(birthday);
+            }else {
+                break;
             }
 
             //date1表示当前的日期，用来和发出通知的日期做比较，如果到达当前的日期，则可以发出通知
@@ -362,19 +358,21 @@ public class Ywgl_Dao {
         }
         //对已经发出的通知作排序
         for (int i = 0; i < noticeList.size()-1; i++) {
-            NoticeMrtz notice = new NoticeMrtz();
-            try {
-                Date date1 = sdf.parse(noticeList.get(i).getNoticeTime());
-                Date date2 = sdf.parse(noticeList.get(i+1).getNoticeTime());
-                if (date1.getTime()<date2.getTime()){
-                    notice = noticeList.get(i);
-                    noticeList.set(i,noticeList.get(i+1));
-                    noticeList.set(i+1,notice);
+            for (int j = 1; j < noticeList.size(); j++) {
+                NoticeMrtz notice = new NoticeMrtz();
+                try {
+                    Date date1 = sdf.parse(noticeList.get(i).getNoticeTime());
+                    Date date2 = sdf.parse(noticeList.get(j).getNoticeTime());
+                    if (date1.getTime()<date2.getTime()){
+                        notice = noticeList.get(i);
+                        noticeList.set(i,noticeList.get(j));
+                        noticeList.set(j,notice);
+                    }
+                    noticeList.get(i).setId(i+1);
+                    noticeList.get(j).setId(j+1);
+                } catch (ParseException e) {
+                    e.printStackTrace();
                 }
-                noticeList.get(i).setId(i+1);
-                noticeList.get(i+1).setId(i+2);
-            } catch (ParseException e) {
-                e.printStackTrace();
             }
         }
         return noticeList;
@@ -552,5 +550,55 @@ public class Ywgl_Dao {
             dao.releaseResource(con,pst,rs);
         }
         return 0;
+    }
+
+    //获取所有用户资料的方法
+    public List<User> findUsers(){
+        String sql = "select distinct a.*,c.* from account a,company c where a.userid=c.c_account";
+        Connection con = DbPool.getConnection();
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        try {
+            pst = con.prepareStatement(sql);
+            rs = dao.execQuery(pst,null);
+            List<User> userList = new ArrayList<>();
+            while (rs!=null&rs.next()){
+                User user = new User();
+                user.setAccountid(rs.getInt(1));
+                user.setUserid(rs.getInt(2));
+                user.setName(rs.getString(3));
+                user.setCompanyname(rs.getString(11));
+                userList.add(user);
+            }
+            return userList;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+            dao.releaseResource(con,pst,rs);
+        }
+        return null;
+    }
+
+    //通过公司名称动态获取公司下的所有工作号
+    public List<String> findjsrBycname(String cname){
+        String sql = "select name from account where companyid=(select c_id from company where c_name=?)";
+        Connection con = DbPool.getConnection();
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        try {
+            List<String> users = new ArrayList<>();
+            pst = con.prepareStatement(sql);
+            rs = dao.execQuery(pst,cname);
+            while (rs!=null&rs.next()){
+                String username =rs.getString(1);
+                users.add(username);
+            }
+            return users;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+            dao.releaseResource(con,pst,rs);
+        }
+        return null;
     }
 }

@@ -1,3 +1,6 @@
+<%@ page import="java.util.List" %>
+<%@ page import="com.yu.pojo.User" %>
+<%@ page import="java.util.ArrayList" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <link href="../css/index.css" rel="stylesheet" type="text/css">
@@ -28,24 +31,28 @@ function doDBClick(url,operator,type) {
   </tr>
 </table>
 <br/>
-<table width="96%" height="30" border="0" align="center" cellpadding="0" cellspacing="0" class="MENU_line">
+<form action="/96909/YwglSvl">
+  <input type="hidden" name="reqType" value="jsxx">
+  <table width="96%" height="30" border="0" align="center" cellpadding="0" cellspacing="0" class="MENU_line">
   <tr>
     <td width="67%" align="right" class="text" nowrap>     &nbsp;&nbsp;&nbsp;发送人：
-      <select>
-      <option>张睛</option>
-      <option>王小兵</option>
-      </select> &nbsp;&nbsp;&nbsp;
+      <select name="fsr">
+        <option></option>
+        <c:forEach items="${users}" var="user">
+          <option>${user.name}</option>
+        </c:forEach>
+      </select>
       状态：
-       <select>
+       <select name="status">
       <option>已读</option>
       <option>未读</option>
       </select>
-      <input type="button" name="searchbtn" value="查  询" class="button_new">
-      <input type="button" name="searchbtn2" value="新  增" class="button_new"onClick="javascript:location.href='ny/ywgl/message_add.html'" >
-      <input type="hidden" name="mod" value="no">
+      <input type="submit"value="查  询" class="button_new">
+      <input type="button" value="新  增" class="button_new"onClick="javascript:location.href='/96909/YwglSvl?reqType=addMessage'" >
       &nbsp;&nbsp; </td>
   </tr>
 </table>
+</form>
 <br>
   <table width="96%" border="0" align="center" cellpadding="0" cellspacing="1" bgcolor="#bdc7d3">
     <tr align="center" class="tdtitle">

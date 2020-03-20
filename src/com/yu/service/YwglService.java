@@ -1,9 +1,6 @@
 package com.yu.service;
 
-import com.yu.pojo.Employer;
-import com.yu.pojo.MessageBean;
-import com.yu.pojo.NoticeMrtz;
-import com.yu.pojo.Worker;
+import com.yu.pojo.*;
 
 import java.util.List;
 
@@ -28,4 +25,8 @@ public interface YwglService {
     MessageBean showMessageByMid(int mid);
 
     Boolean addMessage(MessageBean messageBean);
+
+    List<User> findAllUser();
+
+    List<String> findjsrBycname(String cname);
 }

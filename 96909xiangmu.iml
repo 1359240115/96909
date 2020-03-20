@@ -43,5 +43,7 @@
       </library>
     </orderEntry>
     <orderEntry type="library" name="c3p0-0.9.5.2" level="project" />
+    <orderEntry type="library" name="jackson-core-2.9.9" level="project" />
+    <orderEntry type="library" name="json" level="project" />
   </component>
 </module>

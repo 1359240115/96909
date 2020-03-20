@@ -4,12 +4,21 @@ package com.yu.pojo;
 public class User {
     private int accountid;//公司账号
     private int userid;//用户id
-    private String name;
-    private String email;
-    private String password;
-    private String status;
-    private int type;
-    private int companyid;
+    private String name; //账号拥有者的名字
+    private String email;//账号拥有者的邮箱
+    private String password;//密码
+    private String status;//状态
+    private int type;//公司类型
+    private int companyid;//账号所属公司
+    private String companyname;//公司名称
+
+    public String getCompanyname() {
+        return companyname;
+    }
+
+    public void setCompanyname(String companyname) {
+        this.companyname = companyname;
+    }
 
     public User() {
     }

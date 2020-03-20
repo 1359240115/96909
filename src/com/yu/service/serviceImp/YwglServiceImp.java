@@ -1,10 +1,7 @@
 package com.yu.service.serviceImp;
 
 import com.yu.dao.Ywgl_Dao;
-import com.yu.pojo.Employer;
-import com.yu.pojo.MessageBean;
-import com.yu.pojo.NoticeMrtz;
-import com.yu.pojo.Worker;
+import com.yu.pojo.*;
 import com.yu.service.YwglService;
 
 import java.util.List;
@@ -59,5 +56,15 @@ public class YwglServiceImp implements YwglService {
     @Override
     public Boolean addMessage(MessageBean messageBean) {
         return dao.addMessage(messageBean);
+    }
+
+    @Override
+    public List<User> findAllUser() {
+        return dao.findUsers();
+    }
+
+    @Override
+    public List<String> findjsrBycname(String cname) {
+        return dao.findjsrBycname(cname);
     }
 }
