@@ -1,3 +1,5 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
 "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -109,12 +111,12 @@ body {
 <table width="100%"  border="0" align="center" cellpadding="0" cellspacing="0"  id="menutd">
   <tr>
     <td  width="14"   class="Menu_OutTd"  id="menutd1">&nbsp;</td>
-    <td  width="70" nowrap id="menubar_4"   class="Menu_OutTd">|<a href="yhgl.htm" target="main"> ÓÃ»§¹ÜÀí</a></td>
-    <td  width="70" nowrap id="menubar_5"   class="Menu_OutTd">|<a href="gsgl.htm" target="main"> ¹«Ë¾¹ÜÀí</a></td>
+    <td  width="70" nowrap id="menubar_4"   class="Menu_OutTd">|<a href="yhgl.htm" target="main"> ç”¨æˆ·ç®¡ç†</a></td>
+    <td  width="70" nowrap id="menubar_5"   class="Menu_OutTd">|<a href="gsgl.htm" target="main"> å…¬å¸ç®¡ç†</a></td>
 
-    <td width="70" nowrap class="Menu_OutTd">|<a href="czgl.htm" target="main"> ³äÖµ¹ÜÀí</a></td>
-    <td width="70" nowrap class="Menu_OutTd">|<a href="xfcx.htm" target="main"> Ïû·Ñ²éÑ¯</a></td>
-    <td width="70" nowrap class="Menu_OutTd">|<a href="basedate_list.html" target="main"> Êý¾Ý×Öµä</a></td>
+    <td width="70" nowrap class="Menu_OutTd">|<a href="${pageContext.request.contextPath}/XtglSvl?reqType=CzglMain" target="main"> å……å€¼ç®¡ç†</a></td>
+    <td width="70" nowrap class="Menu_OutTd">|<a href="xfcx.htm" target="main"> æ¶ˆè´¹æŸ¥è¯¢</a></td>
+    <td width="70" nowrap class="Menu_OutTd">|<a href="basedate_list.html" target="main"> æ•°æ®å­—å…¸</a></td>
 
     <td width="676"  nowrap align="right" class="Menu_OutTd"  >&nbsp;</td>
   </tr>

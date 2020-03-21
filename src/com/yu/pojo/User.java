@@ -11,6 +11,18 @@ public class User {
     private int type;//公司类型
     private int companyid;//账号所属公司
     private String companyname;//公司名称
+    private int yue;//账户余额
+    private int skcs;//刷卡次数
+    private int sfbz;//收费标准
+    private String bz;//备注
+
+    public String getBz() {
+        return bz;
+    }
+
+    public void setBz(String bz) {
+        this.bz = bz;
+    }
 
     public String getCompanyname() {
         return companyname;
@@ -90,5 +102,29 @@ public class User {
 
     public void setCompanyid(int companyid) {
         this.companyid = companyid;
+    }
+
+    public int getYue() {
+        return yue;
+    }
+
+    public void setYue(int yue) {
+        this.yue = yue;
+    }
+
+    public int getSkcs() {
+        return skcs;
+    }
+
+    public void setSkcs(int skcs) {
+        this.skcs = skcs;
+    }
+
+    public int getSfbz() {
+        return sfbz;
+    }
+
+    public void setSfbz(int sfbz) {
+        this.sfbz = sfbz;
     }
 }

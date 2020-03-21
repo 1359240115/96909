@@ -458,6 +458,15 @@ public class Ywgl_Dao {
                 dao.execUpdate(pst,mid);
                 con.commit();
                 return message;
+            }else {
+                MessageBean message = new MessageBean();
+                message.setStatus("已读");
+                String sql2 ="UPDATE message set msg_status=1 where msgid = ?";
+                con.setAutoCommit(false);
+                pst = con.prepareStatement(sql2);
+                dao.execUpdate(pst,mid);
+                con.commit();
+                return message;
             }
         } catch (SQLException e) {
             try {
@@ -554,7 +563,7 @@ public class Ywgl_Dao {
 
     //获取所有用户资料的方法
     public List<User> findUsers(){
-        String sql = "select distinct a.*,c.* from account a,company c where a.userid=c.c_account";
+        String sql = "select distinct a.accountid,a.userid,a.name,a.companyid,c.c_name from account a,company c where a.userid=c.c_account";
         Connection con = DbPool.getConnection();
         PreparedStatement pst = null;
         ResultSet rs = null;
@@ -567,7 +576,8 @@ public class Ywgl_Dao {
                 user.setAccountid(rs.getInt(1));
                 user.setUserid(rs.getInt(2));
                 user.setName(rs.getString(3));
-                user.setCompanyname(rs.getString(11));
+                user.setCompanyid(rs.getInt(4));
+                user.setCompanyname(rs.getString(5));
                 userList.add(user);
             }
             return userList;
