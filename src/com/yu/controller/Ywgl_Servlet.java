@@ -1,8 +1,11 @@
 package com.yu.controller;
 
 
+import com.yu.dao.Xtgl_Dao;
 import com.yu.pojo.*;
+import com.yu.service.XtglService;
 import com.yu.service.YwglService;
+import com.yu.service.serviceImp.XtglServiceImp;
 import com.yu.service.serviceImp.YwglServiceImp;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -27,7 +30,11 @@ import java.util.List;
 
 @WebServlet("/YwglSvl")
 public class Ywgl_Servlet extends HttpServlet {
-    YwglService service = new YwglServiceImp();
+    private YwglService service = new YwglServiceImp();
+
+    private XtglService xtservice = new XtglServiceImp();
+
+    private Xtgl_Dao xtdao = new Xtgl_Dao();
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         doGet(request,response);
     }
@@ -149,31 +156,49 @@ public class Ywgl_Servlet extends HttpServlet {
 
     //检索内部消息
     private void queryMessageByjs(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String jieshouren = String.valueOf(request.getSession().getAttribute("user"));
-        String fsr = request.getParameter("fsr");
-        String msgstatus = request.getParameter("status");
-        //这是当前用户接收的所有信息集合
-        List<MessageBean> messageBeans = service.messageList(jieshouren);
-        //新建一个List用来存放检索出来的结果
-        List<MessageBean> messageList = new ArrayList<>();
-        
-        //对messageBeans做迭代，找到符合检索要求的消息，存入messageList
-        //首先判断发送人是否为空
-        for (int i = 0; i < messageBeans.size(); i++) {
-            if (!fsr.isEmpty()){
-                if (messageBeans.get(i).getFasongren().equals(fsr) & messageBeans.get(i).getStatus().equals(msgstatus)){
-                    messageList.add(messageBeans.get(i));
-                }
-            }else {
-                if (messageBeans.get(i).getStatus().equals(msgstatus)){
-                    messageList.add(messageBeans.get(i));
+
+        //首先判断该账户余额是否足够
+        String nowUserid = String.valueOf(request.getSession().getAttribute("user"));
+        boolean yue = xtdao.queryYue(nowUserid);
+        if (yue){
+            String jieshouren = String.valueOf(request.getSession().getAttribute("user"));
+            String fsr = request.getParameter("fsr");
+            String msgstatus = request.getParameter("status");
+            //这是当前用户接收的所有信息集合
+            List<MessageBean> messageBeans = service.messageList(jieshouren);
+            //新建一个List用来存放检索出来的结果
+            List<MessageBean> messageList = new ArrayList<>();
+
+            //对messageBeans做迭代，找到符合检索要求的消息，存入messageList
+            //首先判断发送人是否为空
+            for (int i = 0; i < messageBeans.size(); i++) {
+                if (!fsr.isEmpty()){
+                    if (messageBeans.get(i).getFasongren().equals(fsr) & messageBeans.get(i).getStatus().equals(msgstatus)){
+                        messageList.add(messageBeans.get(i));
+                    }
+                }else {
+                    if (messageBeans.get(i).getStatus().equals(msgstatus)){
+                        messageList.add(messageBeans.get(i));
+                    }
                 }
             }
+            //对操作进行扣费，扣费成功才执行查询，否则不执行。
+            boolean b = xtservice.koufeiByJs(nowUserid);
+            if (b){
+                List<User> users = service.findAllUser();
+                request.setAttribute("users",users);
+                request.setAttribute("messageList",messageList);
+                request.getRequestDispatcher("/ny/ywgl/message_list.jsp").forward(request,response);
+            }else {
+                response.setContentType("text/html;charset=UTF-8");
+                response.getWriter().print("<script>window.alert('扣费失败！请重试');window.history.back();</script>");
+                return;
+            }
+        }else {
+            response.setContentType("text/html;charset=UTF-8");
+            response.getWriter().print("<script>window.alert('账户余额不足！');window.history.back();</script>");
+            return;
         }
-        List<User> users = service.findAllUser();
-        request.setAttribute("users",users);
-        request.setAttribute("messageList",messageList);
-        request.getRequestDispatcher("/ny/ywgl/message_list.jsp").forward(request,response);
     }
 
     //回复内部消息
@@ -349,22 +374,41 @@ public class Ywgl_Servlet extends HttpServlet {
 
     //模糊查询客户
     private void queryEmployerByJS(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        Employer employer = new Employer();
-        String telphone = request.getParameter("telphone");
-        employer.setName(request.getParameter("searchName"));
-        employer.setSex(request.getParameter("radio"));
-        if (!"".equals(telphone)){
-            employer.setPhone(telphone);
+
+        //首先判断该账户余额是否足够
+        String nowUserid = String.valueOf(request.getSession().getAttribute("user"));
+        boolean yue = xtdao.queryYue(nowUserid);
+        if (yue){
+            Employer employer = new Employer();
+            String telphone = request.getParameter("telphone");
+            employer.setName(request.getParameter("searchName"));
+            employer.setSex(request.getParameter("radio"));
+            if (!"".equals(telphone)){
+                employer.setPhone(telphone);
+            }
+            if (!request.getParameter("select").equals("请选择")){
+                employer.setStatus(request.getParameter("select"));
+            }
+            if (!request.getParameter("select2").equals("请选择")){
+                employer.setYaoqiu(request.getParameter("select2"));
+            }
+            //对操作进行扣费，扣费成功才执行查询，否则不执行。
+            boolean b = xtservice.koufeiByJs(nowUserid);
+            if (b){
+                List<Employer> employerList = service.queryEmployerByJS(employer);
+                request.setAttribute("employers",employerList);
+                request.getRequestDispatcher("/ny/ywgl/gzxx.jsp").forward(request,response);
+            }else {
+                response.setContentType("text/html;charset=UTF-8");
+                response.getWriter().print("<script>window.alert('扣费失败！请重试');window.history.back();</script>");
+                return;
+            }
+
+        }else {
+            response.setContentType("text/html;charset=UTF-8");
+            response.getWriter().print("<script>window.alert('账户余额不足！');window.history.back();</script>");
+            return;
         }
-        if (!request.getParameter("select").equals("请选择")){
-            employer.setStatus(request.getParameter("select"));
-        }
-        if (!request.getParameter("select2").equals("请选择")){
-            employer.setYaoqiu(request.getParameter("select2"));
-        }
-        List<Employer> employerList = service.queryEmployerByJS(employer);
-        request.setAttribute("employers",employerList);
-        request.getRequestDispatcher("/ny/ywgl/gzxx.jsp").forward(request,response);
     }
 
 
@@ -379,42 +423,66 @@ public class Ywgl_Servlet extends HttpServlet {
 
     //业务管理下的查询所有工人
     private void queryWorker(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String name = request.getParameter("textarea2");
-        String sex = request.getParameter("sex");
-        int minage = Integer.parseInt(request.getParameter("minage"));
-        int maxage = Integer.parseInt(request.getParameter("maxage"));
-        if (!request.getParameter("textarea7").isEmpty()) {
-            int longtime = Integer.parseInt(request.getParameter("textarea7"));//从业时长
-        }
-        String xueli = request.getParameter("radio");
-        //String[] aihao = request.getParameterValues("checkbox");
-        String[] yuyan = request.getParameterValues("checkbox1");
-        String status = request.getParameter("status");
-        String hyzt = request.getParameter("hyzt");//婚姻状态
-        String zjzt = request.getParameter("checkbox2");//证件
-        String[] grjn = request.getParameterValues("skill");
-        Worker worker = new Worker();
-        worker.setName(name);
-        worker.setSex(sex);
-        worker.setXueli(xueli);
-        worker.setYuyan(yuyan);
-        worker.setStatus(status);
-        worker.setHunfou(hyzt);
-        worker.setJineng(grjn);
-        List<Worker> workerList = service.queryWokerByJS(worker, minage, maxage);
-        if (workerList != null) {
-            if (workerList.size() != 0) {
-                request.setAttribute("workerList", workerList);
-                request.getRequestDispatcher("/ny/ywgl/grxx_jsjg.jsp").forward(request, response);
-            } else {
-                response.setContentType("text/html;charset=UTF-8");
-                response.getWriter().print("<script>window.alert('无此类人员！');window.history.back()</script>");
+        //检索前要判断当前账户是否还有足够的余额，有余额才能进行检索操作
+        String nowUserid = String.valueOf(request.getSession().getAttribute("user"));
+        boolean yue = xtdao.queryYue(nowUserid);
+        if (yue){
+            String name = request.getParameter("textarea2");
+            String sex = request.getParameter("sex");
+            int minage = Integer.parseInt(request.getParameter("minage"));
+            int maxage = Integer.parseInt(request.getParameter("maxage"));
+            if (!request.getParameter("textarea7").isEmpty()) {
+                int longtime = Integer.parseInt(request.getParameter("textarea7"));//从业时长
             }
-        } else {
+            String xueli = request.getParameter("radio");
+            //String[] aihao = request.getParameterValues("checkbox");
+            String[] yuyan = request.getParameterValues("checkbox1");
+            String status = request.getParameter("status");
+            String hyzt = request.getParameter("hyzt");//婚姻状态
+            String zjzt = request.getParameter("checkbox2");//证件
+            String[] grjn = request.getParameterValues("skill");
+            Worker worker = new Worker();
+            worker.setName(name);
+            worker.setSex(sex);
+            worker.setXueli(xueli);
+            worker.setYuyan(yuyan);
+            worker.setStatus(status);
+            worker.setHunfou(hyzt);
+            worker.setJineng(grjn);
+            List<Worker> workerList = service.queryWokerByJS(worker, minage, maxage);
+
+
+            //对操作进行扣费，扣费成功才执行查询，否则不执行。
+            boolean b = xtservice.koufeiByJs(nowUserid);
+            if (b){
+
+                if (workerList != null) {
+                    if (workerList.size() != 0) {
+                        request.setAttribute("workerList", workerList);
+                        request.getRequestDispatcher("/ny/ywgl/grxx_jsjg.jsp").forward(request, response);
+                    } else {
+                        response.setContentType("text/html;charset=UTF-8");
+                        response.getWriter().print("<script>window.alert('无此类人员！');window.history.back();window.location.reload();</script>");
+                        return;
+                    }
+                } else {
+                    response.setContentType("text/html;charset=UTF-8");
+                    response.getWriter().print("<script>window.alert('无此类人员！');window.history.back();window.location.reload();</script>");
+                    return;
+                }
+            }else {
+                response.setContentType("text/html;charset=UTF-8");
+                response.getWriter().print("<script>window.alert('扣费失败！请重试');window.history.back();</script>");
+                return;
+            }
+        }else {
             response.setContentType("text/html;charset=UTF-8");
-            response.getWriter().print("<script>window.alert('无此类人员！');window.history.back()</script>");
+            response.getWriter().print("<script>window.alert('账户余额不足！');window.history.back();</script>");
+            return;
         }
     }
+
+
 
     //判断当前的账户属于哪个公司
     private int queryCompany(String username){

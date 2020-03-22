@@ -406,7 +406,7 @@ public class Ywgl_Dao {
 
     //查看所有的内部消息
     public List<MessageBean> queryAllMessage(String jieshouren){
-        String sql = "select distinct m.*,c.fssj from message m,msgcontext c WHERE m.jieshouren =(SELECT name from account where userid=?)";
+        String sql = "select distinct m.*,c.fssj from message m,msgcontext c WHERE m.jieshouren =(SELECT name from account where userid=?) and m.msgid=c.msgid";
         Connection con = DbPool.getConnection();
         PreparedStatement pst = null;
         ResultSet rs = null;

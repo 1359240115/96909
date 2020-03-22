@@ -115,7 +115,7 @@ body {
     <td  width="70" nowrap id="menubar_5"   class="Menu_OutTd">|<a href="gsgl.htm" target="main"> 公司管理</a></td>
 
     <td width="70" nowrap class="Menu_OutTd">|<a href="${pageContext.request.contextPath}/XtglSvl?reqType=CzglMain" target="main"> 充值管理</a></td>
-    <td width="70" nowrap class="Menu_OutTd">|<a href="xfcx.htm" target="main"> 消费查询</a></td>
+    <td width="70" nowrap class="Menu_OutTd">|<a href="${pageContext.request.contextPath}/XtglSvl?reqType=XfxcMain" target="main"> 消费查询</a></td>
     <td width="70" nowrap class="Menu_OutTd">|<a href="basedate_list.html" target="main"> 数据字典</a></td>
 
     <td width="676"  nowrap align="right" class="Menu_OutTd"  >&nbsp;</td>

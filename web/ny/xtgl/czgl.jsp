@@ -34,24 +34,27 @@ function doDBClick(url,operator,type) {
 </table>
 <br/>
 
-
-  <table width="96%" height="30" border="0" align="center" cellpadding="0" cellspacing="0" class="MENU_line">
+<form action="${pageContext.request.contextPath}/XtglSvl">
+    <input type="hidden" name="reqType" value="queryByJs">
+      <table width="96%" height="30" border="0" align="center" cellpadding="0" cellspacing="0" class="MENU_line">
     <tr>
       <td width="67%" align="right" class="text" nowrap>&nbsp;公司名称：
-        <input type="text" name="searchName" maxlength="20" size="12" value="" class="input">
+        <input type="text" name="companyname" maxlength="20" size="12" value="" class="input">
         &nbsp;&nbsp;&nbsp;&nbsp;公司帐号：
-        <input type="text" name="searchName3" maxlength="20" size="12" value="" class="input">
+        <input type="text" name="accountid" maxlength="20" size="12" value="" class="input">
  &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
-        <input type="button" name="searchbtn" value="查  询" class="button_new">
+        <input type="submit" value="查  询" class="button_new">
       &nbsp;&nbsp; </td>
     </tr>
   </table>
-  <br>
+</form>
+
+<br>
   <table width="96%" border="0" align="center" cellpadding="0" cellspacing="1" bgcolor="#bdc7d3">
     <tr align="center" class="tdtitle">
       <td nowrap align="center" width="3%">序号</td>
       <td width="19%" align="center" nowrap id=".name" >公司名称</td>
-      <td width="8%" align="center" nowrap id=".name" >账户持有人</td>
+      <td width="8%" align="center" nowrap id=".name" >公司账号</td>
       <td width="9%" align="center" nowrap id=".name" >刷卡次数</td>
       <td width="7%" align="center" nowrap id=".name" >收费标准<strong>(元/次)</strong></td>
       <td width="12%" height="24" align="center" nowrap id=".name" >
@@ -68,14 +71,14 @@ function doDBClick(url,operator,type) {
       <tr align="center" class="td2"  onmouseover="javascript:changeBgColorOnMouseOver(this);" onMouseOut="javascript:changeBgColorOnMouseOut(this);" onDblClick="doDBClick('bl.htm',true,'2');">
       <td nowrap align="center" width="3%">${user.accountid}</td>
       <td align="center" nowrap>${user.companyname}</td>
-      <td align="center" nowrap>${user.name}</td>
+      <td align="center" nowrap>${user.userid}</td>
       <td align="center" id="skcs" nowrap>${user.skcs}</td>
       <td align="center" nowrap>${user.sfbz}</td>
       <td height="14" align="center" id="hjxf" nowrap>${user.skcs*user.sfbz}</td>
       <td align="center" id="yue" nowrap>${user.yue}</td>
       <td align="center" nowrap>系统管理员</td>
       <td align="center" nowrap>&nbsp;</td>
-      <td align="center" nowrap><a href="${pageContext.request.contextPath}/ny/xtgl/czgl_xz.jsp?username=${user.name}&accountid=${user.accountid}">充值</a></td>
+      <td align="center" nowrap><a href="${pageContext.request.contextPath}/ny/xtgl/czgl_xz.jsp?username=${user.userid}&accountid=${user.accountid}">充值</a></td>
     </tr>
     </c:forEach>
     <tr align="center" class="td1"  onmouseover="javascript:changeBgColorOnMouseOver(this);" onMouseOut="javascript:changeBgColorOnMouseOut(this);" >

@@ -1,5 +1,7 @@
 package com.yu.controller;
 
+import com.yu.dao.Xtgl_Dao;
+import com.yu.pojo.Cxkfjl;
 import com.yu.pojo.Czjl;
 import com.yu.pojo.User;
 import com.yu.service.XtglService;
@@ -21,8 +23,9 @@ import java.util.List;
 @WebServlet("/XtglSvl")
 public class Xtgl_Servlet extends HttpServlet {
 
-    YwglService ywservice = new YwglServiceImp();
-    XtglService service = new XtglServiceImp();
+    private YwglService ywservice = new YwglServiceImp();
+    private XtglService service = new XtglServiceImp();
+    private Xtgl_Dao xtdao = new Xtgl_Dao();
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         doGet(request,response);
@@ -35,8 +38,80 @@ public class Xtgl_Servlet extends HttpServlet {
             showCzglMain(request,response);
         }else if (reqType.equals("chongzhi")){
             accountRecharge(request,response);
+        }else if (reqType.equals("queryByJs")){
+            queryYueByJs(request,response);
+        }else if (reqType.equals("XfxcMain")){
+            showAllKfjl(request,response);
+        }else if (reqType.equals("jsKfjl")){
+            jsKfjl(request,response);
         }
     }
+
+
+    //检索扣费记录
+    private void jsKfjl(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        //首先判断该账户余额是否足够
+        String nowUserid = String.valueOf(request.getSession().getAttribute("user"));
+        boolean yue = xtdao.queryYue(nowUserid);
+        if (yue){
+            String cname = request.getParameter("cname");
+            String accid = request.getParameter("accid");
+            String mindate = request.getParameter("mindate");
+            String maxdate = request.getParameter("maxdate");
+            //对操作进行扣费，扣费成功才执行查询，否则不执行。
+            boolean b = service.koufeiByJs(nowUserid);
+            if (b){
+                List<Cxkfjl> list = service.jsKfjl(cname, accid, mindate, maxdate);
+                request.setAttribute("kfjlList",list);
+                request.getRequestDispatcher("ny/xtgl/xfcx.jsp").forward(request,response);
+            }else {
+                response.setContentType("text/html;charset=UTF-8");
+                response.getWriter().print("<script>window.alert('扣费失败！请重试');window.history.back();</script>");
+                return;
+            }
+        }else {
+            response.setContentType("text/html;charset=UTF-8");
+            response.getWriter().print("<script>window.alert('账户余额不足！');window.history.back();</script>");
+            return;
+        }
+
+    }
+
+    //打开消费查询时，将所有的检索消费记录显示出来
+    private void showAllKfjl(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        List<Cxkfjl> cxkfjls = service.showAllKfjl();
+        request.setAttribute("kfjlList",cxkfjls);
+        request.getRequestDispatcher("ny/xtgl/xfcx.jsp").forward(request,response);
+    }
+
+
+    //检索账户余额
+    private void queryYueByJs(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        //首先判断该账户余额是否足够
+        String nowUserid = String.valueOf(request.getSession().getAttribute("user"));
+        boolean yue = xtdao.queryYue(nowUserid);
+        if (yue){
+            String companyname = request.getParameter("companyname");
+            String accountid = request.getParameter("accountid");
+
+            //对操作进行扣费，扣费成功才执行查询，否则不执行。
+            boolean b = service.koufeiByJs(nowUserid);
+            if (b){
+                List<User> userList = service.queryYueByJs(companyname, accountid);
+                request.setAttribute("userList",userList);
+                request.getRequestDispatcher("ny/xtgl/czgl.jsp").forward(request,response);
+            }else {
+                response.setContentType("text/html;charset=UTF-8");
+                response.getWriter().print("<script>window.alert('扣费失败！请重试');window.history.back();</script>");
+                return;
+            }
+        }else {
+            response.setContentType("text/html;charset=UTF-8");
+            response.getWriter().print("<script>window.alert('账户余额不足！');window.history.back();</script>");
+            return;
+        }
+    }
+
 
     //给指定的账户充值，并将充值记录写入数据库
     private void accountRecharge(HttpServletRequest request, HttpServletResponse response) throws IOException {
