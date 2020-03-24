@@ -75,7 +75,101 @@ public class Ywgl_Servlet extends HttpServlet {
             findjsrBycname(request,response);
         }else if (reqType.equals("addMessageto")){
             addMessage(request,response);
+        }else if (reqType.equals("jiaoyilist")){
+            showAlljiaoyi(request,response);
+        }else if (reqType.equals("queryTransactionByJs")){
+            queryTransactionByJs(request,response);
+        }else if (reqType.equals("allWE")){
+            allWE(request,response);
+        }else if (reqType.equals("addTransaction")){
+            addTransaction(request,response);
         }
+    }
+
+
+    //新增交易记录
+    private void addTransaction(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        Transaction t = new Transaction();
+        String e_name = request.getParameter("e_name");
+        String w_name = request.getParameter("w_name");
+        int charge = Integer.parseInt(request.getParameter("charge"));
+        if (!request.getParameterValues("t_type").equals("")){
+            String wType = "";
+            for (int i = 0; i < request.getParameterValues("t_type").length; i++) {
+                if (!request.getParameterValues("t_type")[i].trim().isEmpty()){
+                    wType += request.getParameterValues("t_type")[i]+"、";
+                }
+            }
+            if (!wType.trim().isEmpty()){
+                t.setType(wType.substring(0,wType.length()-1));//类型
+            }
+        }else {
+            t.setType("");
+        }
+        String chargeman =request.getParameter("chargeman");
+        int price = Integer.parseInt(request.getParameter("price"));
+        String validity = request.getParameter("validity");
+        String stutus = request.getParameter("stutus");
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = new Date();
+        String inputtime = sdf.format(date);
+
+        t.setW_name(w_name);t.setE_name(e_name);t.setCharge(charge);
+        t.setPrice(price);t.setJbr_name(chargeman);t.setOverdate(validity);t.setStatus(stutus);t.setInputdate(inputtime);
+        t.setC_id(queryCompany(String.valueOf(request.getSession().getAttribute("user"))));
+
+        boolean b = service.addTransaction(t);
+        if (b){
+            response.setContentType("text/html;charset=UTF-8");
+            response.getWriter().print("<script>window.alert('添加成功！');window.location.href='/96909/YwglSvl?reqType=jiaoyilist';</script>");
+        }else {
+            response.setContentType("text/html;charset=UTF-8");
+            response.getWriter().print("<script>window.alert('添加失败！');window.location.href='/96909/YwglSvl?reqType=allWE';</script>");
+        }
+
+    }
+
+
+    //模糊查询交易记录
+    private void queryTransactionByJs(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        //首先判断该账户余额是否足够
+        String nowUserid = String.valueOf(request.getSession().getAttribute("user"));
+        boolean yue = xtdao.queryYue(nowUserid);
+        if (yue){
+            Transaction t = new Transaction();
+            t.setE_name(request.getParameter("e_name"));
+            t.setW_name(request.getParameter("w_name"));
+            t.setStatus(request.getParameter("status"));
+            String mintime = request.getParameter("mininputtime");
+            String maxtime = request.getParameter("maxinputtime");
+
+
+            //对操作进行扣费，扣费成功才执行查询，否则不执行。
+            boolean b = xtservice.koufeiByJs(nowUserid);
+            if (b){
+                List<Transaction> transactionList = service.queryTransactionByJs(t, mintime, maxtime);
+                request.setAttribute("tlist",transactionList);
+                request.getRequestDispatcher("/ny/ywgl/ddgl.jsp").forward(request,response);
+            }else {
+                response.setContentType("text/html;charset=UTF-8");
+                response.getWriter().print("<script>window.alert('扣费失败！请重试');window.history.back();</script>");
+                return;
+            }
+        }else {
+            response.setContentType("text/html;charset=UTF-8");
+            response.getWriter().print("<script>window.alert('账户余额不足！');window.history.back();</script>");
+            return;
+        }
+
+    }
+
+
+    //所有的交易记录
+    private void showAlljiaoyi(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        List<Transaction> transactionList = service.showAlltransaction();
+        request.setAttribute("tlist",transactionList);
+        request.getRequestDispatcher("/ny/ywgl/ddgl.jsp").forward(request,response);
     }
 
 
@@ -480,6 +574,16 @@ public class Ywgl_Servlet extends HttpServlet {
             response.getWriter().print("<script>window.alert('账户余额不足！');window.history.back();</script>");
             return;
         }
+    }
+
+
+    //查找工人和客户的名字显示在用工管理的新增页面下。
+    private void allWE(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        List<String> ws = service.allW();
+        List<String> es = service.allE();
+        request.setAttribute("ws",ws);
+        request.setAttribute("es",es);
+        request.getRequestDispatcher("ny/ywgl/ddgl_xz.jsp").forward(request,response);
     }
 
 

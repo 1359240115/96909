@@ -611,4 +611,167 @@ public class Ywgl_Dao {
         }
         return null;
     }
+
+
+    //所有的交易记录
+    public List<Transaction> showAllTransaction(){
+        String sql ="select t.t_id,e.e_name,e.e_phone,w.w_name,w.w_phone,t.t_price,t.t_type,t.t_status,t.e_id,t.w_id from employer e,worker w,transaction t WHERE e.e_id=t.e_id AND w.w_id=t.w_id";
+        Connection con = DbPool.getConnection();
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        try {
+            pst = con.prepareStatement(sql);
+            rs = dao.execQuery(pst,null);
+            List<Transaction> transactionList = new ArrayList<>();
+            while (rs!=null&rs.next()){
+                Transaction t = new Transaction();
+                t.setId(rs.getInt(1));
+                t.setE_name(rs.getString(2));
+                t.setE_phone(rs.getInt(3));
+                t.setW_name(rs.getString(4));
+                t.setW_phone(rs.getInt(5));
+                t.setPrice(rs.getInt(6));
+                t.setType(rs.getString(7));
+                t.setStatus(rs.getString(8));
+                t.setE_id(rs.getInt(9));
+                t.setW_id(rs.getInt(10));
+                transactionList.add(t);
+            }
+            return transactionList;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+            dao.releaseResource(con,pst,rs);
+        }
+        return null;
+    }
+
+    //模糊查询交易记录
+    public List<Transaction> queryTransactionByJs(Transaction t,String mintime,String maxtime){
+        String sql = "select t.t_id,e.e_name,e.e_phone,w.w_name,w.w_phone,t.t_price,t.t_type,t.t_status,t.e_id,t.w_id from employer e,worker w,transaction t WHERE e.e_id=t.e_id AND w.w_id=t.w_id";
+        String cri ="";
+        if (!t.getE_name().trim().isEmpty()){
+            cri += " and e.e_name like '%"+t.getE_name()+"%'";
+        }
+
+        if (!t.getW_name().trim().isEmpty()){
+                cri += " and w.w_name like '%"+t.getW_name()+"%' ";
+        }
+
+        if (!t.getStatus().trim().isEmpty()&!t.getStatus().equals("请选择")){
+            cri += " and t.t_status='"+t.getStatus()+"'";
+        }
+
+        if (!mintime.trim().isEmpty()){
+                cri = " and t.t_inputdate >'"+mintime+"' ";
+        }
+        if (!maxtime.trim().isEmpty()){
+            cri += " and t.t_inputdate <'"+maxtime+"' ";
+        }
+
+        if (!cri.trim().isEmpty()){
+            sql += cri;
+        }
+        Connection con = DbPool.getConnection();
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        try {
+            pst = con.prepareStatement(sql);
+            rs = dao.execQuery(pst,null);
+            List<Transaction> transactionList = new ArrayList<>();
+            while (rs!=null&rs.next()){
+                Transaction t1 = new Transaction();
+                t1.setId(rs.getInt(1));
+                t1.setE_name(rs.getString(2));
+                t1.setE_phone(rs.getInt(3));
+                t1.setW_name(rs.getString(4));
+                t1.setW_phone(rs.getInt(5));
+                t1.setPrice(rs.getInt(6));
+                t1.setType(rs.getString(7));
+                t1.setStatus(rs.getString(8));
+                t1.setE_id(rs.getInt(9));
+                t1.setW_id(rs.getInt(10));
+                transactionList.add(t1);
+            }
+            return transactionList;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+            dao.releaseResource(con,pst,rs);
+        }
+        return null;
+    }
+
+    //新增交易记录
+    public boolean addTransaction(Transaction t){
+        String sql = "insert into transaction(c_id,w_id,e_id,t_chargeman,t_inputdate,t_validity,t_status,t_price,t_type,t_charge) VALUES(?,(select w_id from worker WHERE w_name = ?),(select e_id from employer WHERE e_name = ?),?,?,?,?,?,?,?)";
+        Connection con = DbPool.getConnection();
+        PreparedStatement pst = null;
+        boolean rs = false;
+        try {
+            con.setAutoCommit(false);
+            pst = con.prepareStatement(sql);
+            dao.execUpdate(pst,t.getC_id(),t.getW_name(),t.getE_name(),t.getJbr_name(),t.getInputdate(),t.getOverdate(),t.getStatus(),t.getPrice(),t.getType(),t.getCharge());
+            con.commit();
+            rs = true;
+            return rs;
+        } catch (SQLException e) {
+            try {
+                con.rollback();
+            } catch (SQLException e1) {
+                e1.printStackTrace();
+            }
+            e.printStackTrace();
+        }finally {
+            dao.releaseResource(con,pst,null);
+        }
+        return rs;
+    }
+
+
+    //查找工人的名字并返回
+    public List<String> allW(){
+        String sql = "select w_name from worker";
+        Connection con = DbPool.getConnection();
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        try {
+            List<String> w_names = new ArrayList<>();
+            pst = con.prepareStatement(sql);
+            rs = dao.execQuery(pst,null);
+            while (rs!=null&rs.next()){
+                String w_name = rs.getString(1);
+                w_names.add(w_name);
+            }
+            return w_names;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+            dao.releaseResource(con,pst,rs);
+        }
+        return null;
+    }
+
+    //查找客户的名字并返回
+    public List<String> allE(){
+        String sql = "select e_name from employer";
+        Connection con = DbPool.getConnection();
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        try {
+            List<String> e_names = new ArrayList<>();
+            pst = con.prepareStatement(sql);
+            rs = dao.execQuery(pst,null);
+            while (rs!=null&rs.next()){
+                String e_name = rs.getString(1);
+                e_names.add(e_name);
+            }
+            return e_names;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+            dao.releaseResource(con,pst,rs);
+        }
+        return null;
+    }
 }

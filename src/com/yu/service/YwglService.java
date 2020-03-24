@@ -29,4 +29,14 @@ public interface YwglService {
     List<User> findAllUser();
 
     List<String> findjsrBycname(String cname);
+
+    List<Transaction> showAlltransaction();
+
+    List<Transaction> queryTransactionByJs(Transaction t ,String mintime , String maxtime);
+
+    boolean addTransaction(Transaction t);
+
+    List<String> allW();
+
+    List<String> allE();
 }

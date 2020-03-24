@@ -67,4 +67,28 @@ public class YwglServiceImp implements YwglService {
     public List<String> findjsrBycname(String cname) {
         return dao.findjsrBycname(cname);
     }
+
+    @Override
+    public List<Transaction> showAlltransaction() {
+        return dao.showAllTransaction();
+    }
+
+    @Override
+    public List<Transaction> queryTransactionByJs(Transaction t, String mintime, String maxtime) {
+        return dao.queryTransactionByJs(t,mintime,maxtime);
+    }
+
+    @Override
+    public boolean addTransaction(Transaction t) {
+        return dao.addTransaction(t);
+    }
+
+    @Override
+    public List<String> allW() {
+        return dao.allW();
+    }
+
+    public List<String> allE(){
+        return dao.allE();
+    }
 }

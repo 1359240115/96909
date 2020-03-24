@@ -372,7 +372,7 @@ public class Xtgl_Dao {
             }
 
             //此处是收费标准。
-            if (yue>2){
+            if (yue>=2){
                 yn =true;
             }
             return yn;

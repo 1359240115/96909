@@ -7,10 +7,15 @@ public class Transaction {
     private int id;//交易记录编号
     private int c_id;//公司编号
     private int e_id;//雇主编号
+    private String e_name;
+    private int e_phone;
     private int w_id;//工人编号
+    private String w_name;
+    private int w_phone;
     private int jbr_id;//经办人编号
-    private Date inputdate;//登记日期
-    private Date overdate;//有效日期
+    private String jbr_name;
+    private String inputdate;//登记日期
+    private String overdate;//有效日期
     private String status;//状态
     private int price;//工资
     private String type;//雇佣类型
@@ -26,6 +31,46 @@ public class Transaction {
         this.e_id = e_id;
         this.w_id = w_id;
         this.jbr_id = jbr_id;
+    }
+
+    public String getE_name() {
+        return e_name;
+    }
+
+    public void setE_name(String e_name) {
+        this.e_name = e_name;
+    }
+
+    public int getE_phone() {
+        return e_phone;
+    }
+
+    public void setE_phone(int e_phone) {
+        this.e_phone = e_phone;
+    }
+
+    public String getW_name() {
+        return w_name;
+    }
+
+    public void setW_name(String w_name) {
+        this.w_name = w_name;
+    }
+
+    public int getW_phone() {
+        return w_phone;
+    }
+
+    public void setW_phone(int w_phone) {
+        this.w_phone = w_phone;
+    }
+
+    public String getJbr_name() {
+        return jbr_name;
+    }
+
+    public void setJbr_name(String jbr_name) {
+        this.jbr_name = jbr_name;
     }
 
     public int getId() {
@@ -68,19 +113,19 @@ public class Transaction {
         this.jbr_id = jbr_id;
     }
 
-    public Date getInputdate() {
+    public String getInputdate() {
         return inputdate;
     }
 
-    public void setInputdate(Date inputdate) {
+    public void setInputdate(String inputdate) {
         this.inputdate = inputdate;
     }
 
-    public Date getOverdate() {
+    public String getOverdate() {
         return overdate;
     }
 
-    public void setOverdate(Date overdate) {
+    public void setOverdate(String overdate) {
         this.overdate = overdate;
     }
 
