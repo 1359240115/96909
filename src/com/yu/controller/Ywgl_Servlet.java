@@ -515,7 +515,7 @@ public class Ywgl_Servlet extends HttpServlet {
     }
 
 
-    //业务管理下的查询所有工人
+    //业务管理下的模糊查询工人
     private void queryWorker(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         //检索前要判断当前账户是否还有足够的余额，有余额才能进行检索操作
         String nowUserid = String.valueOf(request.getSession().getAttribute("user"));
@@ -556,12 +556,12 @@ public class Ywgl_Servlet extends HttpServlet {
                         request.getRequestDispatcher("/ny/ywgl/grxx_jsjg.jsp").forward(request, response);
                     } else {
                         response.setContentType("text/html;charset=UTF-8");
-                        response.getWriter().print("<script>window.alert('无此类人员！');window.history.back();window.location.reload();</script>");
+                        response.getWriter().print("<script>window.alert('无此类人员！');window.history.back();</script>");
                         return;
                     }
                 } else {
                     response.setContentType("text/html;charset=UTF-8");
-                    response.getWriter().print("<script>window.alert('无此类人员！');window.history.back();window.location.reload();</script>");
+                    response.getWriter().print("<script>window.alert('无此类人员！');window.history.back();</script>");
                     return;
                 }
             }else {
